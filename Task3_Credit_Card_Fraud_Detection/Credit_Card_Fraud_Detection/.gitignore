@@ -1,0 +1,47 @@
+# Credit Card Fraud Detection — .gitignore
+
+# ── Python ──
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+*.egg
+
+# ── Virtual Environments ──
+venv/
+env/
+.venv/
+.env/
+
+# ── Jupyter Notebook ──
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# ── IDE ──
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ── OS ──
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── Dataset (large file) ──
+dataset/*.csv
+
+# ── Model files (large) ──
+# models/*.pkl
+# Uncomment above if models are too large for GitHub
+
+# ── Logs ──
+*.log
+
+# ── Misc ──
+.env
+.envrc

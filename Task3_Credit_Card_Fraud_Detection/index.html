@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Credit Card Fraud Detection — CodSoft Task 5</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --primary: #2563EB;
+            --primary-dark: #1D4ED8;
+            --accent: #7C3AED;
+            --accent-light: #A78BFA;
+            --danger: #EF4444;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --bg-dark: #0B1120;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --bg-glass: rgba(255, 255, 255, 0.06);
+            --border-glass: rgba(255, 255, 255, 0.08);
+            --text-primary: #F1F5F9;
+            --text-secondary: #94A3B8;
+            --text-muted: #64748B;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ── Scrollbar ── */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-dark); }
+        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 3px; }
+
+        /* ── Background Glow ── */
+        .bg-glow {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        .bg-glow::before {
+            content: '';
+            position: absolute;
+            top: -30%; left: -20%;
+            width: 70%; height: 70%;
+            background: radial-gradient(circle, rgba(37, 99, 235, 0.08) 0%, transparent 70%);
+            animation: glowMove 20s ease-in-out infinite;
+        }
+        .bg-glow::after {
+            content: '';
+            position: absolute;
+            bottom: -20%; right: -20%;
+            width: 60%; height: 60%;
+            background: radial-gradient(circle, rgba(124, 58, 237, 0.06) 0%, transparent 70%);
+            animation: glowMove 25s ease-in-out infinite reverse;
+        }
+        @keyframes glowMove {
+            0%, 100% { transform: translate(0, 0); }
+            33% { transform: translate(5%, 3%); }
+            66% { transform: translate(-3%, 5%); }
+        }
+
+        /* ── Glass Card ── */
+        .glass {
+            background: var(--bg-glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border-glass);
+            border-radius: 16px;
+        }
+        .glass-sm {
+            background: var(--bg-glass);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-glass);
+            border-radius: 12px;
+        }
+
+        /* ── Navbar ── */
+        .navbar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 1000;
+            background: rgba(11, 17, 32, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-glass);
+            transition: all 0.3s ease;
+        }
+        .navbar.scrolled {
+            background: rgba(11, 17, 32, 0.95);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+        }
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        .nav-link:hover {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* ── Section ── */
+        .section {
+            position: relative;
+            z-index: 1;
+            padding: 5rem 1.5rem;
+        }
+        .section-title {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 0.75rem;
+            background: linear-gradient(135deg, var(--text-primary) 0%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .section-subtitle {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            max-width: 640px;
+            line-height: 1.7;
+        }
+
+        /* ── Badge ── */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.375rem 0.875rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            border: 1px solid;
+        }
+        .badge-blue { background: rgba(37, 99, 235, 0.1); color: #60A5FA; border-color: rgba(37, 99, 235, 0.3); }
+        .badge-purple { background: rgba(124, 58, 237, 0.1); color: #A78BFA; border-color: rgba(124, 58, 237, 0.3); }
+        .badge-green { background: rgba(16, 185, 129, 0.1); color: #34D399; border-color: rgba(16, 185, 129, 0.3); }
+        .badge-red { background: rgba(239, 68, 68, 0.1); color: #F87171; border-color: rgba(239, 68, 68, 0.3); }
+        .badge-amber { background: rgba(245, 158, 11, 0.1); color: #FBBF24; border-color: rgba(245, 158, 11, 0.3); }
+
+        /* ── Hero ── */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 6rem 1.5rem 4rem;
+            position: relative;
+            z-index: 1;
+        }
+        .hero-title {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #FFFFFF 0%, #60A5FA 50%, #A78BFA 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero-subtitle {
+            font-size: clamp(1rem, 2.5vw, 1.25rem);
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            line-height: 1.8;
+        }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1.25rem;
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.15), rgba(124, 58, 237, 0.15));
+            border: 1px solid rgba(37, 99, 235, 0.3);
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #60A5FA;
+            margin-bottom: 2rem;
+        }
+
+        /* ── Stats Row ── */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 1rem;
+            max-width: 700px;
+            margin: 2.5rem auto 0;
+        }
+        .stat-item {
+            text-align: center;
+            padding: 1.25rem 0.75rem;
+        }
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #60A5FA, #A78BFA);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            margin-top: 0.25rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* ── Cards Grid ── */
+        .cards-grid {
+            display: grid;
+            gap: 1.25rem;
+        }
+        .cards-grid-2 { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+        .cards-grid-3 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+        .cards-grid-4 { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+
+        .card {
+            padding: 1.75rem;
+            transition: all 0.4s ease;
+        }
+        .card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(37, 99, 235, 0.25);
+            box-shadow: 0 8px 40px rgba(37, 99, 235, 0.08);
+        }
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+        }
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+        .card-text {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* ── Pipeline ── */
+        .pipeline-container {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 2rem;
+        }
+        .pipeline-step {
+            display: flex;
+            align-items: center;
+            gap: 0.625rem;
+            padding: 0.875rem 1.25rem;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .pipeline-step:hover { transform: scale(1.05); }
+        .pipeline-arrow {
+            color: var(--text-muted);
+            font-size: 1.25rem;
+        }
+
+        /* ── Table ── */
+        .table-container {
+            overflow-x: auto;
+            border-radius: 12px;
+            border: 1px solid var(--border-glass);
+            margin-top: 1.5rem;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.875rem;
+        }
+        thead { background: rgba(37, 99, 235, 0.08); }
+        th {
+            padding: 0.875rem 1.25rem;
+            text-align: left;
+            font-weight: 700;
+            color: #60A5FA;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        td {
+            padding: 0.75rem 1.25rem;
+            border-top: 1px solid var(--border-glass);
+            color: var(--text-secondary);
+        }
+        tbody tr:hover { background: rgba(255, 255, 255, 0.02); }
+
+        /* ── Code Block ── */
+        .code-block {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border-glass);
+            border-radius: 12px;
+            padding: 1.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.825rem;
+            line-height: 1.8;
+            overflow-x: auto;
+            position: relative;
+        }
+        .code-block .comment { color: #6B7280; }
+        .code-block .command { color: #60A5FA; }
+        .code-block .flag { color: #A78BFA; }
+        .code-block .path { color: #34D399; }
+
+        /* ── Folder Structure ── */
+        .folder-tree {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            line-height: 2;
+            color: var(--text-secondary);
+            padding: 1.5rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-glass);
+            border-radius: 12px;
+            overflow-x: auto;
+        }
+        .folder-tree .folder { color: #60A5FA; font-weight: 600; }
+        .folder-tree .file { color: #34D399; }
+        .folder-tree .special { color: #FBBF24; }
+
+        /* ── Image Gallery ── */
+        .viz-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 1.25rem;
+            margin-top: 2rem;
+        }
+        .viz-card {
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border-glass);
+            background: var(--bg-glass);
+            transition: all 0.4s ease;
+        }
+        .viz-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(37, 99, 235, 0.3);
+            box-shadow: 0 12px 40px rgba(37, 99, 235, 0.1);
+        }
+        .viz-card img {
+            width: 100%;
+            height: 220px;
+            object-fit: contain;
+            background: white;
+            display: block;
+            padding: 10px;
+            border-bottom: 1px solid var(--border-glass);
+        }
+        .viz-card .viz-label {
+            padding: 0.875rem 1.125rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* ── Placeholder ── */
+        .img-placeholder {
+            width: 100%;
+            height: 240px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 0.75rem;
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.05), rgba(124, 58, 237, 0.05));
+            border-bottom: 1px solid var(--border-glass);
+        }
+        .img-placeholder span {
+            font-size: 2.5rem;
+        }
+        .img-placeholder p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* ── Footer ── */
+        .footer {
+            border-top: 1px solid var(--border-glass);
+            padding: 3rem 1.5rem;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ── Animations ── */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ── Mobile Menu ── */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.25rem;
+        }
+        .nav-links-mobile {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: rgba(11, 17, 32, 0.98);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-glass);
+            padding: 1rem;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+        .nav-links-mobile.active { display: flex; }
+
+        @media (max-width: 768px) {
+            .section { padding: 3rem 1rem; }
+            .section-title { font-size: 1.6rem; }
+            .nav-links-desktop { display: none !important; }
+            .mobile-menu-btn { display: block; }
+            .viz-grid { grid-template-columns: 1fr; }
+            .cards-grid-3, .cards-grid-4 { grid-template-columns: 1fr; }
+            .stats-row { grid-template-columns: repeat(2, 1fr); }
+            .pipeline-container { flex-direction: column; }
+            .pipeline-arrow { transform: rotate(90deg); }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Background Glow -->
+<div class="bg-glow"></div>
+
+<!-- ═══════════════ NAVBAR ═══════════════ -->
+<nav class="navbar" id="navbar">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0.875rem 1.5rem; display: flex; align-items: center; justify-content: space-between;">
+        <a href="#hero" style="text-decoration: none; display: flex; align-items: center; gap: 0.625rem;">
+            <span style="font-size: 1.5rem;">💳</span>
+            <span style="font-weight: 800; font-size: 1rem; color: var(--text-primary);">Fraud Detection</span>
+            <span class="badge badge-purple" style="font-size: 0.65rem;">Task 5</span>
+        </a>
+        <div class="nav-links-desktop" style="display: flex; align-items: center; gap: 0.25rem;">
+            <a href="#overview" class="nav-link">Overview</a>
+            <a href="#dataset" class="nav-link">Dataset</a>
+            <a href="#pipeline" class="nav-link">Pipeline</a>
+            <a href="#models" class="nav-link">Models</a>
+            <a href="#results" class="nav-link">Results</a>
+            <a href="#visualizations" class="nav-link">Visuals</a>
+            <a href="#run" class="nav-link">Run</a>
+        </div>
+        <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Toggle menu">☰</button>
+    </div>
+    <div class="nav-links-mobile" id="mobileMenu">
+        <a href="#overview" class="nav-link" onclick="closeMobileMenu()">Overview</a>
+        <a href="#dataset" class="nav-link" onclick="closeMobileMenu()">Dataset</a>
+        <a href="#pipeline" class="nav-link" onclick="closeMobileMenu()">Pipeline</a>
+        <a href="#models" class="nav-link" onclick="closeMobileMenu()">Models</a>
+        <a href="#results" class="nav-link" onclick="closeMobileMenu()">Results</a>
+        <a href="#visualizations" class="nav-link" onclick="closeMobileMenu()">Visuals</a>
+        <a href="#run" class="nav-link" onclick="closeMobileMenu()">Run</a>
+    </div>
+</nav>
+
+<!-- ═══════════════ HERO ═══════════════ -->
+<section class="hero" id="hero">
+    <div>
+        <div class="hero-badge">
+            <span>🎓</span>
+            <span>CodSoft Data Science Internship — Task 5</span>
+        </div>
+        <h1 class="hero-title">Credit Card<br>Fraud Detection</h1>
+        <p class="hero-subtitle">
+            A machine learning system that identifies fraudulent credit card transactions
+            from a highly imbalanced dataset of 284,807 transactions using advanced
+            classification algorithms and comprehensive evaluation metrics.
+        </p>
+        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 0.75rem; margin-top: 1.5rem;">
+            <span class="badge badge-blue">🐍 Python</span>
+            <span class="badge badge-purple">🤖 Scikit-Learn</span>
+            <span class="badge badge-green">📊 Pandas</span>
+            <span class="badge badge-amber">📈 Matplotlib</span>
+            <span class="badge badge-red">🎯 Classification</span>
+        </div>
+        <div class="stats-row glass" style="margin-top: 3rem; padding: 1rem; border-radius: 16px;">
+            <div class="stat-item">
+                <div class="stat-value">284K+</div>
+                <div class="stat-label">Transactions</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">31</div>
+                <div class="stat-label">Features</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">4</div>
+                <div class="stat-label">Models</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">0.17%</div>
+                <div class="stat-label">Fraud Rate</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════ OVERVIEW ═══════════════ -->
+<section class="section" id="overview">
+    <div style="max-width: 1100px; margin: 0 auto;">
+        <div class="fade-in" style="text-align: center; margin-bottom: 3rem;">
+            <span class="badge badge-blue" style="margin-bottom: 1rem;">📋 Overview</span>
+            <h2 class="section-title" style="margin: 0 auto;">Project Overview</h2>
+            <p class="section-subtitle" style="margin: 0.75rem auto 0;">
+                An end-to-end machine learning pipeline for detecting fraudulent credit card transactions,
+                handling extreme class imbalance with a fraud ratio of just 0.172%.
+            </p>
+        </div>
+        <div class="cards-grid cards-grid-3 fade-in">
+            <div class="glass card">
+                <div class="card-icon" style="background: rgba(37, 99, 235, 0.1); color: #60A5FA;">🎯</div>
+                <div class="card-title">Objective</div>
+                <div class="card-text">Build a robust classification model to identify fraudulent transactions among 284,807 records with only 492 fraud cases.</div>
+            </div>
+            <div class="glass card">
+                <div class="card-icon" style="background: rgba(124, 58, 237, 0.1); color: #A78BFA;">⚖️</div>
+                <div class="card-title">Key Challenge</div>
+                <div class="card-text">Extreme class imbalance — fraud is only 0.172% of data. Standard accuracy is misleading; specialized metrics and techniques are critical.</div>
+            </div>
+            <div class="glass card">
+                <div class="card-icon" style="background: rgba(16, 185, 129, 0.1); color: #34D399;">🏗️</div>
+                <div class="card-title">Approach</div>
+                <div class="card-text">Balanced class weights, stratified splitting, feature engineering, GridSearchCV tuning, and evaluation with ROC-AUC, F1, and Precision-Recall.</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════ DATASET ═══════════════ -->
+<section class="section" id="dataset">
+    <div style="max-width: 1100px; margin: 0 auto;">
+        <div class="fade-in" style="text-align: center; margin-bottom: 3rem;">
+            <span class="badge badge-green" style="margin-bottom: 1rem;">📊 Dataset</span>
+            <h2 class="section-title">Dataset Details</h2>
+            <p class="section-subtitle" style="margin: 0.75rem auto 0;">
+                Credit card transactions made by European cardholders in September 2013,
+                containing PCA-transformed anonymized features.
+            </p>
+        </div>
+        <div class="cards-grid cards-grid-2 fade-in">
+            <div class="glass card">
+                <div class="card-title" style="color: #60A5FA; margin-bottom: 1rem;">📑 Dataset Properties</div>
+                <div class="table-container">
+                    <table>
+                        <tbody>
+                            <tr><td style="font-weight: 600; color: var(--text-primary);">Source</td><td>Kaggle — MLG ULB</td></tr>
+                            <tr><td style="font-weight: 600; color: var(--text-primary);">Total Transactions</td><td>284,807</td></tr>
+                            <tr><td style="font-weight: 600; color: var(--text-primary);">Fraud Cases</td><td>492 (0.172%)</td></tr>
+                            <tr><td style="font-weight: 600; color: var(--text-primary);">Legitimate Cases</td><td>284,315 (99.828%)</td></tr>
+                            <tr><td style="font-weight: 600; color: var(--text-primary);">Features</td><td>31 columns</td></tr>
+                            <tr><td style="font-weight: 600; color: var(--text-primary);">Imbalance Ratio</td><td>~578:1</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="glass card">
+                <div class="card-title" style="color: #60A5FA; margin-bottom: 1rem;">🔤 Feature Description</div>
+                <div class="table-container">
+                    <table>
+                        <thead><tr><th>Feature</th><th>Description</th></tr></thead>
+                        <tbody>
+                            <tr><td style="font-weight: 600; color: var(--text-primary);">Time</td><td>Seconds since first transaction</td></tr>
+                            <tr><td style="font-weight: 600; color: var(--text-primary);">V1–V28</td><td>PCA-transformed (anonymized)</td></tr>
+                            <tr><td style="font-weight: 600; color: var(--text-primary);">Amount</td><td>Transaction amount ($)</td></tr>
+                            <tr><td style="font-weight: 600; color: var(--text-primary);">Class</td><td>0 = Legit, 1 = Fraud</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════ ML PIPELINE ═══════════════ -->
+<section class="section" id="pipeline">
+    <div style="max-width: 1100px; margin: 0 auto;">
+        <div class="fade-in" style="text-align: center; margin-bottom: 2rem;">
+            <span class="badge badge-purple" style="margin-bottom: 1rem;">🔄 Pipeline</span>
+            <h2 class="section-title">ML Pipeline</h2>
+            <p class="section-subtitle" style="margin: 0.75rem auto 0;">
+                A systematic machine learning workflow from data ingestion to model deployment.
+            </p>
+        </div>
+        <div class="pipeline-container fade-in">
+            <div class="glass-sm pipeline-step" style="background: rgba(37, 99, 235, 0.1); border-color: rgba(37, 99, 235, 0.3);">
+                <span>📥</span> Load Data
+            </div>
+            <span class="pipeline-arrow">→</span>
+            <div class="glass-sm pipeline-step" style="background: rgba(124, 58, 237, 0.1); border-color: rgba(124, 58, 237, 0.3);">
+                <span>🧹</span> Preprocess
+            </div>
+            <span class="pipeline-arrow">→</span>
+            <div class="glass-sm pipeline-step" style="background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.3);">
+                <span>⚙️</span> Features
+            </div>
+            <span class="pipeline-arrow">→</span>
+            <div class="glass-sm pipeline-step" style="background: rgba(245, 158, 11, 0.1); border-color: rgba(245, 158, 11, 0.3);">
+                <span>🤖</span> Train
+            </div>
+            <span class="pipeline-arrow">→</span>
+            <div class="glass-sm pipeline-step" style="background: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.3);">
+                <span>🎯</span> Tune
+            </div>
+            <span class="pipeline-arrow">→</span>
+            <div class="glass-sm pipeline-step" style="background: rgba(6, 182, 212, 0.1); border-color: rgba(6, 182, 212, 0.3);">
+                <span>📊</span> Evaluate
+            </div>
+            <span class="pipeline-arrow">→</span>
+            <div class="glass-sm pipeline-step" style="background: rgba(168, 85, 247, 0.1); border-color: rgba(168, 85, 247, 0.3);">
+                <span>💾</span> Save
+            </div>
+        </div>
+
+        <!-- Feature Engineering Cards -->
+        <div style="margin-top: 3rem;">
+            <h3 style="text-align: center; font-size: 1.25rem; font-weight: 700; color: var(--text-primary); margin-bottom: 1.5rem;">Engineered Features</h3>
+            <div class="cards-grid cards-grid-4 fade-in">
+                <div class="glass-sm card" style="padding: 1.25rem;">
+                    <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">⏰</div>
+                    <div class="card-title" style="font-size: 0.95rem;">Hour & Is_Night</div>
+                    <div class="card-text" style="font-size: 0.8rem;">Cyclical hour extraction and night-time flag for temporal patterns.</div>
+                </div>
+                <div class="glass-sm card" style="padding: 1.25rem;">
+                    <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">💰</div>
+                    <div class="card-title" style="font-size: 0.95rem;">Log_Amount & Bins</div>
+                    <div class="card-text" style="font-size: 0.8rem;">Log-transformed amount to reduce skewness and binned categories.</div>
+                </div>
+                <div class="glass-sm card" style="padding: 1.25rem;">
+                    <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">📐</div>
+                    <div class="card-title" style="font-size: 0.95rem;">V_Mean & V_Std</div>
+                    <div class="card-text" style="font-size: 0.8rem;">Statistical aggregations across all 28 PCA components.</div>
+                </div>
+                <div class="glass-sm card" style="padding: 1.25rem;">
+                    <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">⚡</div>
+                    <div class="card-title" style="font-size: 0.95rem;">V_Extreme_Count</div>
+                    <div class="card-text" style="font-size: 0.8rem;">Count of V-features with extreme values as anomaly indicator.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════ MODELS ═══════════════ -->
+<section class="section" id="models">
+    <div style="max-width: 1100px; margin: 0 auto;">
+        <div class="fade-in" style="text-align: center; margin-bottom: 3rem;">
+            <span class="badge badge-amber" style="margin-bottom: 1rem;">🤖 Models</span>
+            <h2 class="section-title">Models Used</h2>
+            <p class="section-subtitle" style="margin: 0.75rem auto 0;">
+                Four classification algorithms trained with balanced class weights
+                to handle the extreme imbalance in fraud detection.
+            </p>
+        </div>
+        <div class="cards-grid cards-grid-2 fade-in">
+            <div class="glass card">
+                <div class="card-icon" style="background: rgba(37, 99, 235, 0.1); color: #60A5FA;">📈</div>
+                <div class="card-title">Logistic Regression</div>
+                <div class="card-text">Linear model with balanced class weights. Fast training, highly interpretable, and provides probability estimates. Strong baseline for binary classification.</div>
+                <div style="margin-top: 0.75rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                    <span class="badge badge-blue" style="font-size: 0.65rem;">Linear</span>
+                    <span class="badge badge-green" style="font-size: 0.65rem;">Fast</span>
+                    <span class="badge badge-purple" style="font-size: 0.65rem;">Interpretable</span>
+                </div>
+            </div>
+            <div class="glass card">
+                <div class="card-icon" style="background: rgba(16, 185, 129, 0.1); color: #34D399;">🌳</div>
+                <div class="card-title">Decision Tree</div>
+                <div class="card-text">Non-linear tree-based classifier that captures complex patterns. Handles class imbalance natively with balanced weights. Easy to visualize and understand.</div>
+                <div style="margin-top: 0.75rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                    <span class="badge badge-green" style="font-size: 0.65rem;">Non-Linear</span>
+                    <span class="badge badge-amber" style="font-size: 0.65rem;">Visual</span>
+                    <span class="badge badge-purple" style="font-size: 0.65rem;">Balanced</span>
+                </div>
+            </div>
+            <div class="glass card">
+                <div class="card-icon" style="background: rgba(124, 58, 237, 0.1); color: #A78BFA;">🌲</div>
+                <div class="card-title">Random Forest</div>
+                <div class="card-text">Ensemble of decision trees with bootstrap aggregation. Reduces overfitting, provides feature importance scores, and handles imbalanced classes effectively.</div>
+                <div style="margin-top: 0.75rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                    <span class="badge badge-purple" style="font-size: 0.65rem;">Ensemble</span>
+                    <span class="badge badge-blue" style="font-size: 0.65rem;">Robust</span>
+                    <span class="badge badge-green" style="font-size: 0.65rem;">Feature Rank</span>
+                </div>
+            </div>
+            <div class="glass card">
+                <div class="card-icon" style="background: rgba(245, 158, 11, 0.1); color: #FBBF24;">🚀</div>
+                <div class="card-title">Gradient Boosting</div>
+                <div class="card-text">Sequential boosting method that builds trees to correct previous errors. Excellent for complex patterns and typically achieves high ROC-AUC scores.</div>
+                <div style="margin-top: 0.75rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                    <span class="badge badge-amber" style="font-size: 0.65rem;">Boosting</span>
+                    <span class="badge badge-red" style="font-size: 0.65rem;">High Accuracy</span>
+                    <span class="badge badge-blue" style="font-size: 0.65rem;">Sequential</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════ RESULTS ═══════════════ -->
+<section class="section" id="results">
+    <div style="max-width: 1100px; margin: 0 auto;">
+        <div class="fade-in" style="text-align: center; margin-bottom: 3rem;">
+            <span class="badge badge-red" style="margin-bottom: 1rem;">📊 Results</span>
+            <h2 class="section-title">Evaluation Results</h2>
+            <p class="section-subtitle" style="margin: 0.75rem auto 0;">
+                Comprehensive model comparison across multiple metrics with emphasis
+                on Recall, F1-Score, and ROC-AUC for fraud detection effectiveness.
+            </p>
+        </div>
+        <div class="fade-in">
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Model</th>
+                            <th>Accuracy</th>
+                            <th>Precision</th>
+                            <th>Recall</th>
+                            <th>F1 Score</th>
+                            <th>ROC-AUC</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="font-weight: 600; color: var(--text-primary);">Logistic Regression</td>
+                            <td>0.9745</td><td>0.0609</td><td>0.9184</td><td>0.1143</td><td>0.9769</td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: 600; color: var(--text-primary);">Decision Tree</td>
+                            <td>0.9991</td><td>0.7317</td><td>0.7551</td><td>0.7432</td><td>0.8774</td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: 600; color: var(--text-primary);">Random Forest</td>
+                            <td>0.9996</td><td>0.9487</td><td>0.7551</td><td>0.8409</td><td>0.9519</td>
+                        </tr>
+                        <tr style="background: rgba(37, 99, 235, 0.06);">
+                            <td style="font-weight: 700; color: #60A5FA;">🏆 Gradient Boosting</td>
+                            <td style="color: #34D399; font-weight: 600;">0.9995</td>
+                            <td style="color: #34D399; font-weight: 600;">0.8750</td>
+                            <td style="color: #34D399; font-weight: 600;">0.7857</td>
+                            <td style="color: #34D399; font-weight: 600;">0.8279</td>
+                            <td style="color: #34D399; font-weight: 600;">0.9723</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p style="text-align: center; color: var(--text-muted); font-size: 0.8rem; margin-top: 0.75rem;">
+                * Results are approximate. Run <code style="color: #60A5FA;">python main.py</code> to generate actual metrics.
+            </p>
+        </div>
+
+        <!-- Evaluation Metrics Explanation -->
+        <div class="cards-grid cards-grid-3 fade-in" style="margin-top: 2.5rem;">
+            <div class="glass-sm card" style="padding: 1.25rem; text-align: center;">
+                <div style="font-size: 1.75rem; margin-bottom: 0.5rem;">🎯</div>
+                <div class="card-title" style="font-size: 0.95rem; color: #60A5FA;">Precision</div>
+                <div class="card-text" style="font-size: 0.8rem;">Of all predicted frauds, how many are actually fraud? Minimizes false alarms.</div>
+            </div>
+            <div class="glass-sm card" style="padding: 1.25rem; text-align: center;">
+                <div style="font-size: 1.75rem; margin-bottom: 0.5rem;">🔍</div>
+                <div class="card-title" style="font-size: 0.95rem; color: #A78BFA;">Recall</div>
+                <div class="card-text" style="font-size: 0.8rem;">Of all actual frauds, how many were detected? Minimizes missed fraud cases.</div>
+            </div>
+            <div class="glass-sm card" style="padding: 1.25rem; text-align: center;">
+                <div style="font-size: 1.75rem; margin-bottom: 0.5rem;">📐</div>
+                <div class="card-title" style="font-size: 0.95rem; color: #34D399;">ROC-AUC</div>
+                <div class="card-text" style="font-size: 0.8rem;">Area under ROC curve. Measures overall model discrimination ability across thresholds.</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════ PROJECT STRUCTURE ═══════════════ -->
+<section class="section" id="structure">
+    <div style="max-width: 1100px; margin: 0 auto;">
+        <div class="fade-in" style="text-align: center; margin-bottom: 3rem;">
+            <span class="badge badge-green" style="margin-bottom: 1rem;">📁 Structure</span>
+            <h2 class="section-title">Project Structure</h2>
+            <p class="section-subtitle" style="margin: 0.75rem auto 0;">
+                Clean, modular architecture following software engineering best practices.
+            </p>
+        </div>
+        <div class="fade-in">
+            <div class="folder-tree">
+<span class="folder">Credit_Card_Fraud_Detection/</span>
+│
+├── <span class="folder">dataset/</span>
+│   └── <span class="special">download_dataset.md</span>
+│
+├── <span class="folder">notebook/</span>
+│   └── <span class="file">Credit_Card_Fraud_Detection.ipynb</span>
+│
+├── <span class="folder">src/</span>
+│   ├── <span class="file">__init__.py</span>
+│   ├── <span class="file">preprocessing.py</span>
+│   ├── <span class="file">feature_engineering.py</span>
+│   ├── <span class="file">model_training.py</span>
+│   ├── <span class="file">evaluation.py</span>
+│   ├── <span class="file">prediction.py</span>
+│   └── <span class="file">utils.py</span>
+│
+├── <span class="folder">models/</span>
+│   ├── <span class="special">fraud_detection_model.pkl</span>
+│   └── <span class="special">scaler.pkl</span>
+│
+├── <span class="folder">outputs/</span>
+│   ├── <span class="file">class_distribution.png</span>
+│   ├── <span class="file">transaction_amount_distribution.png</span>
+│   ├── <span class="file">correlation_heatmap.png</span>
+│   ├── <span class="file">fraud_vs_legitimate.png</span>
+│   ├── <span class="file">missing_values_heatmap.png</span>
+│   ├── <span class="file">feature_importance.png</span>
+│   ├── <span class="file">confusion_matrix.png</span>
+│   ├── <span class="file">roc_curve.png</span>
+│   ├── <span class="file">precision_recall_curve.png</span>
+│   ├── <span class="file">model_comparison.csv</span>
+│   └── <span class="file">predictions.csv</span>
+│
+├── <span class="folder">screenshots/</span>
+│   └── <span class="special">README.md</span>
+│
+├── <span class="special">README.md</span>
+├── <span class="file">requirements.txt</span>
+├── <span class="file">main.py</span>
+├── <span class="file">index.html</span>
+└── <span class="special">.gitignore</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════ CODE STRUCTURE ═══════════════ -->
+<section class="section" id="code">
+    <div style="max-width: 1100px; margin: 0 auto;">
+        <div class="fade-in" style="text-align: center; margin-bottom: 3rem;">
+            <span class="badge badge-purple" style="margin-bottom: 1rem;">🧩 Code</span>
+            <h2 class="section-title">Code Architecture</h2>
+            <p class="section-subtitle" style="margin: 0.75rem auto 0;">
+                Modular design with separation of concerns for maintainability and reusability.
+            </p>
+        </div>
+        <div class="cards-grid cards-grid-3 fade-in">
+            <div class="glass card">
+                <div class="card-icon" style="background: rgba(37, 99, 235, 0.1); color: #60A5FA;">🧹</div>
+                <div class="card-title">preprocessing.py</div>
+                <div class="card-text">Data loading, missing value analysis, duplicate detection, class distribution, train/test split, and StandardScaler application.</div>
+            </div>
+            <div class="glass card">
+                <div class="card-icon" style="background: rgba(124, 58, 237, 0.1); color: #A78BFA;">⚙️</div>
+                <div class="card-title">feature_engineering.py</div>
+                <div class="card-text">Time features (Hour, Is_Night), amount features (Log, Bins), and V-feature aggregations (Mean, Std, Extreme Count).</div>
+            </div>
+            <div class="glass card">
+                <div class="card-icon" style="background: rgba(16, 185, 129, 0.1); color: #34D399;">🤖</div>
+                <div class="card-title">model_training.py</div>
+                <div class="card-text">Multi-model training pipeline, model comparison, GridSearchCV hyperparameter tuning, and model persistence.</div>
+            </div>
+            <div class="glass card">
+                <div class="card-icon" style="background: rgba(245, 158, 11, 0.1); color: #FBBF24;">📊</div>
+                <div class="card-title">evaluation.py</div>
+                <div class="card-text">Classification reports, confusion matrix, ROC curve, precision-recall curve, and feature importance visualizations.</div>
+            </div>
+            <div class="glass card">
+                <div class="card-icon" style="background: rgba(239, 68, 68, 0.1); color: #F87171;">🔮</div>
+                <div class="card-title">prediction.py</div>
+                <div class="card-text">Prediction generation, predictions CSV export with actual/predicted/probability columns, and model loading utilities.</div>
+            </div>
+            <div class="glass card">
+                <div class="card-icon" style="background: rgba(6, 182, 212, 0.1); color: #22D3EE;">🛠️</div>
+                <div class="card-title">utils.py</div>
+                <div class="card-text">Logging configuration, directory creation, plot styling, DataFrame I/O, and project path management with pathlib.</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════ VISUALIZATIONS ═══════════════ -->
+<section class="section" id="visualizations">
+    <div style="max-width: 1200px; margin: 0 auto;">
+        <div class="fade-in" style="text-align: center; margin-bottom: 3rem;">
+            <span class="badge badge-amber" style="margin-bottom: 1rem;">📈 Visuals</span>
+            <h2 class="section-title">Generated Visualizations</h2>
+            <p class="section-subtitle" style="margin: 0.75rem auto 0;">
+                All visualizations are generated automatically by the pipeline and saved in the
+                <code style="color: #60A5FA; font-family: 'JetBrains Mono', monospace; font-size: 0.9rem;">outputs/</code> directory.
+            </p>
+        </div>
+        <div class="viz-grid fade-in" id="vizGrid">
+            <!-- Populated by JavaScript -->
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════ HOW TO RUN ═══════════════ -->
+<section class="section" id="run">
+    <div style="max-width: 1100px; margin: 0 auto;">
+        <div class="fade-in" style="text-align: center; margin-bottom: 3rem;">
+            <span class="badge badge-green" style="margin-bottom: 1rem;">▶️ Run</span>
+            <h2 class="section-title">How to Run</h2>
+            <p class="section-subtitle" style="margin: 0.75rem auto 0;">
+                Get the project running in just a few simple steps.
+            </p>
+        </div>
+        <div class="cards-grid cards-grid-2 fade-in">
+            <div class="glass card">
+                <div class="card-title" style="color: #60A5FA; margin-bottom: 1rem;">📦 Installation</div>
+                <div class="code-block">
+<span class="comment"># Clone the repository</span>
+<span class="command">git clone</span> <span class="path">https://github.com/yourusername/Credit_Card_Fraud_Detection.git</span>
+<span class="command">cd</span> <span class="path">Credit_Card_Fraud_Detection</span>
+
+<span class="comment"># Create virtual environment</span>
+<span class="command">python</span> <span class="flag">-m</span> venv venv
+<span class="command">source</span> <span class="path">venv/bin/activate</span>
+
+<span class="comment"># Install dependencies</span>
+<span class="command">pip install</span> <span class="flag">-r</span> <span class="path">requirements.txt</span>
+
+<span class="comment"># Download dataset from Kaggle</span>
+<span class="command">kaggle datasets download</span> <span class="flag">-d</span> mlg-ulb/creditcardfraud
+<span class="command">unzip</span> <span class="path">creditcardfraud.zip</span> <span class="flag">-d</span> <span class="path">dataset/</span>
+                </div>
+            </div>
+            <div class="glass card">
+                <div class="card-title" style="color: #A78BFA; margin-bottom: 1rem;">🚀 Execution</div>
+                <div class="code-block">
+<span class="comment"># Option 1: Run complete pipeline</span>
+<span class="command">python</span> <span class="path">main.py</span>
+
+<span class="comment"># Option 2: Jupyter Notebook</span>
+<span class="command">cd</span> <span class="path">notebook</span>
+<span class="command">jupyter notebook</span> <span class="path">Credit_Card_Fraud_Detection.ipynb</span>
+
+<span class="comment"># Option 3: View landing page</span>
+<span class="command">open</span> <span class="path">index.html</span>
+                </div>
+                <div style="margin-top: 1rem; padding: 1rem; background: rgba(16, 185, 129, 0.06); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 8px;">
+                    <div style="font-size: 0.85rem; color: #34D399; font-weight: 600;">✅ main.py will automatically:</div>
+                    <ul style="margin-top: 0.5rem; color: var(--text-secondary); font-size: 0.8rem; list-style: none; display: flex; flex-direction: column; gap: 0.25rem;">
+                        <li>• Load & preprocess data</li>
+                        <li>• Engineer features</li>
+                        <li>• Train & compare 4 models</li>
+                        <li>• Tune best model (GridSearchCV)</li>
+                        <li>• Generate all plots & CSVs</li>
+                        <li>• Save model & scaler</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════ FOOTER ═══════════════ -->
+<footer class="footer">
+    <div style="max-width: 1100px; margin: 0 auto;">
+        <div style="display: flex; align-items: center; justify-content: center; gap: 0.75rem; margin-bottom: 1rem;">
+            <span style="font-size: 2rem;">💳</span>
+            <span style="font-size: 1.25rem; font-weight: 800;">Credit Card Fraud Detection</span>
+        </div>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0.5rem;">
+            CodSoft Data Science Internship — Task 5
+        </p>
+        <p style="color: var(--text-muted); font-size: 0.8rem;">
+            Built with ❤️ using Python, Scikit-Learn, Pandas, and Matplotlib
+        </p>
+        <div style="margin-top: 1.5rem; display: flex; justify-content: center; gap: 0.75rem; flex-wrap: wrap;">
+            <span class="badge badge-blue" style="font-size: 0.7rem;">Python</span>
+            <span class="badge badge-purple" style="font-size: 0.7rem;">Scikit-Learn</span>
+            <span class="badge badge-green" style="font-size: 0.7rem;">Pandas</span>
+            <span class="badge badge-amber" style="font-size: 0.7rem;">Matplotlib</span>
+            <span class="badge badge-red" style="font-size: 0.7rem;">Seaborn</span>
+        </div>
+        <p style="color: var(--text-muted); font-size: 0.7rem; margin-top: 1.5rem; opacity: 0.5;">
+            © 2026 CodSoft Internship Project. All rights reserved.
+        </p>
+    </div>
+</footer>
+
+<!-- ═══════════════ JAVASCRIPT ═══════════════ -->
+<script>
+    // ── Visualization Gallery ──
+    const visualizations = [
+    { file: "class_distribution.png", label: "Class Distribution", icon: "📊" },
+    { file: "transaction_amount_distribution.png", label: "Transaction Amount Distribution", icon: "💰" },
+    { file: "fraud_vs_legitimate.png", label: "Fraud vs Legitimate Transactions", icon: "⚖️" },
+    { file: "correlation_heatmap.png", label: "Correlation Heatmap", icon: "🔥" },
+    { file: "missing_values_heatmap.png", label: "Missing Values Heatmap", icon: "🔍" },
+    { file: "feature_importance.png", label: "Feature Importance", icon: "📈" },
+    { file: "confusion_matrix.png", label: "Confusion Matrix", icon: "🎯" },
+    { file: "roc_curve.png", label: "ROC Curve", icon: "📉" },
+    { file: "precision_recall_curve.png", label: "Precision–Recall Curve", icon: "⚡" }
+];
+
+    const vizGrid = document.getElementById("vizGrid");
+
+        visualizations.forEach(viz => {
+            const card = document.createElement("div");
+            card.className = "viz-card";
+
+            card.innerHTML = `
+                <img
+                    src="Credit_Card_Fraud_Detection/outputs/${viz.file}"
+                    alt="${viz.label}"
+                    loading="lazy"
+                    onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+
+                <div class="img-placeholder" style="display:none;">
+                    <span>${viz.icon}</span>
+                    <p>${viz.label}</p>
+                </div>
+
+                <div class="viz-label">
+                    <span>${viz.icon}</span>
+                    ${viz.label}
+                </div>
+            `;
+
+            vizGrid.appendChild(card);
+        });
+
+    // ── Navbar Scroll Effect ──
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+    });
+
+    // ── Smooth Scroll ──
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+    });
+
+    // ── Scroll Animations ──
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, observerOptions);
+
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+    // ── Mobile Menu ──
+    function toggleMobileMenu() {
+        document.getElementById('mobileMenu').classList.toggle('active');
+    }
+
+    function closeMobileMenu() {
+        document.getElementById('mobileMenu').classList.remove('active');
+    }
+
+    // ── Console Greeting ──
+    console.log(
+        '%c💳 Credit Card Fraud Detection %c— CodSoft Task 5',
+        'color: #60A5FA; font-size: 16px; font-weight: bold;',
+        'color: #A78BFA; font-size: 14px;'
+    );
+</script>
+</body>
+</html>
