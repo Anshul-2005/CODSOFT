@@ -1,0 +1,2 @@
+# This file ensures the models/ directory is tracked by Git.
+# Trained models (movie_rating_model.pkl, scaler.pkl) will be saved here when you run main.py.

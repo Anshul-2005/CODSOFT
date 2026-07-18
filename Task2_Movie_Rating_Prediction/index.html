@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Titanic Survival Prediction — CodSoft Data Science Internship Task 1</title>
-    <meta name="description" content="Complete Machine Learning pipeline for Titanic Survival Prediction - CodSoft Data Science Internship Task 1">
+    <title>Movie Rating Prediction — CodSoft Data Science Internship Task 2</title>
+    <meta name="description" content="Complete Machine Learning regression pipeline for IMDb Movie Rating Prediction - CodSoft Data Science Internship Task 2">
     <meta name="author" content="CodSoft Data Science Intern">
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
@@ -27,18 +27,18 @@
         }
 
         .gradient-text {
-            background: linear-gradient(135deg, #60a5fa, #a78bfa, #f472b6);
+            background: linear-gradient(135deg, #f59e0b, #ef4444, #ec4899);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
 
-        .glow-blue {
-            box-shadow: 0 0 30px rgba(59, 130, 246, 0.15);
+        .glow-orange {
+            box-shadow: 0 0 30px rgba(245, 158, 11, 0.15);
         }
 
-        .glow-green {
-            box-shadow: 0 0 30px rgba(34, 197, 94, 0.15);
+        .glow-red {
+            box-shadow: 0 0 30px rgba(239, 68, 68, 0.15);
         }
 
         .tree-line {
@@ -56,7 +56,7 @@
         }
 
         .tab-active {
-            background: #2563eb;
+            background: #f59e0b;
             color: white;
         }
 
@@ -75,7 +75,7 @@
         }
 
         .file-tree-item:hover {
-            background: rgba(59, 130, 246, 0.1);
+            background: rgba(245, 158, 11, 0.1);
         }
 
         .metric-card {
@@ -118,9 +118,9 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
                 <div class="flex items-center gap-3">
-                    <span class="text-2xl">🚢</span>
-                    <span class="font-bold text-lg">Titanic Survival Prediction</span>
-                    <span class="hidden sm:inline text-xs px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-400 border border-blue-500/30">CodSoft Task 1</span>
+                    <span class="text-2xl">🎬</span>
+                    <span class="font-bold text-lg">Movie Rating Prediction</span>
+                    <span class="hidden sm:inline text-xs px-2 py-0.5 rounded-full bg-orange-500/20 text-orange-400 border border-orange-500/30">CodSoft Task 2</span>
                 </div>
                 <div class="hidden md:flex items-center gap-1">
                     <a href="#overview" class="px-3 py-2 text-sm text-slate-400 hover:text-white transition">Overview</a>
@@ -153,41 +153,42 @@
     <section class="pt-28 pb-16 px-4">
         <div class="max-w-5xl mx-auto text-center">
             <div class="animate-in animate-delay-1">
-                <p class="text-blue-400 font-medium tracking-wider uppercase text-sm mb-4">CodSoft Data Science Internship • Task 1</p>
+                <p class="text-orange-400 font-medium tracking-wider uppercase text-sm mb-4">CodSoft Data Science Internship • Task 2</p>
                 <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black mb-6 gradient-text leading-tight">
-                    Titanic Survival<br>Prediction
+                    Movie Rating<br>Prediction
                 </h1>
                 <p class="text-slate-400 text-lg max-w-2xl mx-auto mb-8 leading-relaxed">
-                    A complete Machine Learning pipeline — from raw data to trained model — that predicts
-                    passenger survival on the RMS Titanic using 6 classification algorithms with hyperparameter tuning.
+                    A complete Machine Learning regression pipeline that predicts IMDb movie ratings 
+                    using 6 regression algorithms with hyperparameter tuning, analyzing features like 
+                    genre, director, actors, duration, and votes.
                 </p>
             </div>
             <div class="animate-in animate-delay-2 flex flex-wrap justify-center gap-3 mb-12">
-                <span class="px-3 py-1.5 rounded-lg text-sm font-medium bg-blue-500/10 text-blue-400 border border-blue-500/20">Python 3.11+</span>
+                <span class="px-3 py-1.5 rounded-lg text-sm font-medium bg-orange-500/10 text-orange-400 border border-orange-500/20">Python 3.11+</span>
                 <span class="px-3 py-1.5 rounded-lg text-sm font-medium bg-green-500/10 text-green-400 border border-green-500/20">Scikit-Learn</span>
                 <span class="px-3 py-1.5 rounded-lg text-sm font-medium bg-yellow-500/10 text-yellow-400 border border-yellow-500/20">Pandas</span>
                 <span class="px-3 py-1.5 rounded-lg text-sm font-medium bg-purple-500/10 text-purple-400 border border-purple-500/20">Matplotlib</span>
                 <span class="px-3 py-1.5 rounded-lg text-sm font-medium bg-pink-500/10 text-pink-400 border border-pink-500/20">Seaborn</span>
-                <span class="px-3 py-1.5 rounded-lg text-sm font-medium bg-orange-500/10 text-orange-400 border border-orange-500/20">NumPy</span>
+                <span class="px-3 py-1.5 rounded-lg text-sm font-medium bg-red-500/10 text-red-400 border border-red-500/20">Regression</span>
             </div>
 
             <!-- Quick Stats -->
             <div class="animate-in animate-delay-3 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto">
-                <div class="glass rounded-xl p-4 glow-blue">
-                    <p class="text-3xl font-bold text-blue-400">891</p>
-                    <p class="text-xs text-slate-500 mt-1">Passengers</p>
+                <div class="glass rounded-xl p-4 glow-orange">
+                    <p class="text-3xl font-bold text-orange-400">15K+</p>
+                    <p class="text-xs text-slate-500 mt-1">Movies</p>
                 </div>
-                <div class="glass rounded-xl p-4 glow-blue">
+                <div class="glass rounded-xl p-4 glow-orange">
                     <p class="text-3xl font-bold text-purple-400">6</p>
                     <p class="text-xs text-slate-500 mt-1">ML Models</p>
                 </div>
-                <div class="glass rounded-xl p-4 glow-blue">
-                    <p class="text-3xl font-bold text-green-400">7</p>
+                <div class="glass rounded-xl p-4 glow-orange">
+                    <p class="text-3xl font-bold text-green-400">12+</p>
                     <p class="text-xs text-slate-500 mt-1">Engineered Features</p>
                 </div>
-                <div class="glass rounded-xl p-4 glow-blue">
-                    <p class="text-3xl font-bold text-pink-400">13+</p>
-                    <p class="text-xs text-slate-500 mt-1">Visualizations</p>
+                <div class="glass rounded-xl p-4 glow-orange">
+                    <p class="text-3xl font-bold text-pink-400">0.74</p>
+                    <p class="text-xs text-slate-500 mt-1">R² Score</p>
                 </div>
             </div>
         </div>
@@ -207,12 +208,12 @@
                         <h3 class="text-xl font-semibold">Business Problem</h3>
                     </div>
                     <p class="text-slate-400 leading-relaxed mb-4">
-                        The sinking of the RMS Titanic on April 15, 1912, killed more than 1,500 of the 2,224 passengers and crew. 
-                        This project builds a binary classification model to predict: <strong class="text-white">Did a passenger survive?</strong>
+                        Movie ratings are crucial for studios, streaming platforms, and audiences. This project builds a 
+                        <strong class="text-white">regression model</strong> to predict IMDb ratings based on movie attributes.
                     </p>
                     <p class="text-slate-400 leading-relaxed">
-                        By analyzing factors like passenger class, gender, age, fare, and family size, we can understand
-                        what made certain groups more likely to survive.
+                        By analyzing factors like genre, director reputation, cast star power, duration, and audience engagement (votes), 
+                        we can estimate how well a movie will be received.
                     </p>
                 </div>
 
@@ -226,27 +227,27 @@
                         <tbody>
                             <tr class="border-b border-slate-700/50">
                                 <td class="py-2 text-slate-500">Source</td>
-                                <td class="py-2 text-right"><a href="https://www.kaggle.com/datasets/yasserh/titanic-dataset" target="_blank" class="text-blue-400 hover:underline">Kaggle (yasserh)</a></td>
+                                <td class="py-2 text-right"><a href="https://www.kaggle.com/datasets/adrianmcmahon/imdb-india-movies" target="_blank" class="text-orange-400 hover:underline">Kaggle (IMDb India)</a></td>
                             </tr>
                             <tr class="border-b border-slate-700/50">
                                 <td class="py-2 text-slate-500">Rows</td>
-                                <td class="py-2 text-right font-medium">891</td>
+                                <td class="py-2 text-right font-medium">~15,000+</td>
                             </tr>
                             <tr class="border-b border-slate-700/50">
                                 <td class="py-2 text-slate-500">Columns</td>
-                                <td class="py-2 text-right font-medium">12</td>
+                                <td class="py-2 text-right font-medium">10</td>
                             </tr>
                             <tr class="border-b border-slate-700/50">
                                 <td class="py-2 text-slate-500">Target</td>
-                                <td class="py-2 text-right"><code class="code-font text-green-400 bg-green-500/10 px-2 py-0.5 rounded">Survived</code></td>
+                                <td class="py-2 text-right"><code class="code-font text-orange-400 bg-orange-500/10 px-2 py-0.5 rounded">Rating</code></td>
                             </tr>
                             <tr class="border-b border-slate-700/50">
                                 <td class="py-2 text-slate-500">Task</td>
-                                <td class="py-2 text-right font-medium">Binary Classification</td>
+                                <td class="py-2 text-right font-medium">Regression</td>
                             </tr>
                             <tr>
-                                <td class="py-2 text-slate-500">Survival Rate</td>
-                                <td class="py-2 text-right font-medium">38.4%</td>
+                                <td class="py-2 text-slate-500">Rating Range</td>
+                                <td class="py-2 text-right font-medium">0 - 10</td>
                             </tr>
                         </tbody>
                     </table>
@@ -266,7 +267,6 @@
                                 <th class="text-left py-3 px-2 text-slate-400 font-medium">Column</th>
                                 <th class="text-left py-3 px-2 text-slate-400 font-medium">Type</th>
                                 <th class="text-left py-3 px-2 text-slate-400 font-medium">Description</th>
-                                <th class="text-left py-3 px-2 text-slate-400 font-medium">Missing</th>
                             </tr>
                         </thead>
                         <tbody id="featureTable"></tbody>
@@ -280,42 +280,42 @@
     <section id="pipeline" class="py-16 px-4 bg-slate-900/50">
         <div class="max-w-6xl mx-auto">
             <h2 class="text-3xl font-bold mb-2">ML Pipeline</h2>
-            <p class="text-slate-500 mb-10">End-to-end workflow executed by <code class="code-font text-blue-400">python main.py</code></p>
+            <p class="text-slate-500 mb-10">End-to-end workflow executed by <code class="code-font text-orange-400">python main.py</code></p>
 
-            <div class="grid grid-cols-2 md:grid-cols-5 gap-4" id="pipelineSteps">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4" id="pipelineSteps">
             </div>
 
             <!-- Preprocessing Details -->
             <div class="grid md:grid-cols-2 gap-6 mt-10">
                 <div class="glass rounded-2xl p-6">
                     <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
-                        <span class="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center text-blue-400 text-sm font-bold">🧹</span>
+                        <span class="w-8 h-8 rounded-lg bg-orange-500/20 flex items-center justify-center text-orange-400 text-sm font-bold">🧹</span>
                         Data Preprocessing
                     </h3>
                     <div class="space-y-3 text-sm">
                         <div class="flex items-start gap-3">
                             <span class="text-green-400 mt-0.5">✓</span>
-                            <div><strong class="text-white">Age</strong><span class="text-slate-400"> — Median imputation grouped by Pclass & Sex</span></div>
+                            <div><strong class="text-white">Year</strong><span class="text-slate-400"> — Extract first 4-digit year from ranges like "2019-2020"</span></div>
                         </div>
                         <div class="flex items-start gap-3">
                             <span class="text-green-400 mt-0.5">✓</span>
-                            <div><strong class="text-white">Embarked</strong><span class="text-slate-400"> — Mode imputation (Southampton)</span></div>
+                            <div><strong class="text-white">Duration</strong><span class="text-slate-400"> — Parse minutes from "120 min" format</span></div>
                         </div>
                         <div class="flex items-start gap-3">
                             <span class="text-green-400 mt-0.5">✓</span>
-                            <div><strong class="text-white">Cabin</strong><span class="text-slate-400"> — Binary flag (CabinAvailable)</span></div>
+                            <div><strong class="text-white">Votes</strong><span class="text-slate-400"> — Remove comma separators, convert to integer</span></div>
                         </div>
                         <div class="flex items-start gap-3">
                             <span class="text-green-400 mt-0.5">✓</span>
-                            <div><strong class="text-white">Sex</strong><span class="text-slate-400"> — Label Encoding (binary)</span></div>
+                            <div><strong class="text-white">Rating</strong><span class="text-slate-400"> — Filter valid 0-10 range, drop missing</span></div>
                         </div>
                         <div class="flex items-start gap-3">
                             <span class="text-green-400 mt-0.5">✓</span>
-                            <div><strong class="text-white">Embarked</strong><span class="text-slate-400"> — One-Hot Encoding (3 categories)</span></div>
+                            <div><strong class="text-white">Missing Values</strong><span class="text-slate-400"> — Median imputation for numeric, "Unknown" for text</span></div>
                         </div>
                         <div class="flex items-start gap-3">
                             <span class="text-green-400 mt-0.5">✓</span>
-                            <div><strong class="text-white">Features</strong><span class="text-slate-400"> — StandardScaler normalization</span></div>
+                            <div><strong class="text-white">Scaling</strong><span class="text-slate-400"> — StandardScaler normalization</span></div>
                         </div>
                     </div>
                 </div>
@@ -348,7 +348,7 @@
     <section id="models" class="py-16 px-4 bg-slate-900/50">
         <div class="max-w-6xl mx-auto">
             <h2 class="text-3xl font-bold mb-2">Models & Evaluation</h2>
-            <p class="text-slate-500 mb-10">6 classification algorithms trained and compared</p>
+            <p class="text-slate-500 mb-10">6 regression algorithms trained and compared</p>
 
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4" id="modelCards">
             </div>
@@ -357,7 +357,7 @@
             <div class="glass rounded-2xl p-6 mt-8">
                 <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
                     <span class="text-2xl">📏</span>
-                    Evaluation Metrics Explained
+                    Regression Metrics Explained
                 </h3>
                 <div class="grid md:grid-cols-2 gap-4" id="metricsGrid">
                 </div>
@@ -371,7 +371,7 @@
                 </h3>
                 <p class="text-slate-400 text-sm mb-4">
                     GridSearchCV with 5-fold cross-validation is performed on the top 2 models. The search explores
-                    combinations of hyperparameters to find the optimal configuration that maximizes accuracy.
+                    combinations of hyperparameters to find the optimal configuration that maximizes R² score.
                 </p>
                 <div class="grid md:grid-cols-2 gap-4">
                     <div class="bg-slate-800/50 rounded-lg p-4">
@@ -418,35 +418,66 @@ min_samples_split: [2, 5]</code></pre>
     <!-- Results Section -->
     <section id="results" class="py-16 px-4 bg-slate-900/50">
         <div class="max-w-6xl mx-auto">
-            <h2 class="text-3xl font-bold mb-2">Output Artifacts</h2>
-            <p class="text-slate-500 mb-10">All generated files saved in the <code class="code-font text-blue-400">outputs/</code> directory</p>
+            <h2 class="text-3xl font-bold mb-2">Results & Outputs</h2>
+            <p class="text-slate-500 mb-10">Model performance and generated artifacts</p>
 
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <!-- Best Model Results -->
+            <div class="glass rounded-2xl p-6 mb-8 glow-orange">
+                <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
+                    <span class="text-2xl">🏆</span>
+                    Best Model Performance
+                </h3>
+                <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+                    <div class="text-center p-4 bg-slate-800/50 rounded-xl">
+                        <p class="text-xs text-slate-500 mb-1">Model</p>
+                        <p class="text-lg font-bold text-orange-400">Gradient Boosting</p>
+                    </div>
+                    <div class="text-center p-4 bg-slate-800/50 rounded-xl">
+                        <p class="text-xs text-slate-500 mb-1">Test R²</p>
+                        <p class="text-2xl font-bold text-green-400">0.7416</p>
+                    </div>
+                    <div class="text-center p-4 bg-slate-800/50 rounded-xl">
+                        <p class="text-xs text-slate-500 mb-1">CV R²</p>
+                        <p class="text-2xl font-bold text-blue-400">0.7544</p>
+                    </div>
+                    <div class="text-center p-4 bg-slate-800/50 rounded-xl">
+                        <p class="text-xs text-slate-500 mb-1">RMSE</p>
+                        <p class="text-2xl font-bold text-purple-400">0.6931</p>
+                    </div>
+                    <div class="text-center p-4 bg-slate-800/50 rounded-xl">
+                        <p class="text-xs text-slate-500 mb-1">MAE</p>
+                        <p class="text-2xl font-bold text-pink-400">0.4796</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Output Files -->
+            <div class="grid md:grid-cols-3 gap-4 mb-8">
                 <div class="glass rounded-xl p-5 metric-card">
                     <div class="flex items-center gap-3 mb-2">
                         <span class="text-xl">📊</span>
                         <span class="font-medium">model_comparison.csv</span>
                     </div>
-                    <p class="text-sm text-slate-500">Performance table comparing all 6 models across Train Accuracy, Test Accuracy, CV Mean, and CV Std.</p>
+                    <p class="text-sm text-slate-500">Performance table comparing all 6 models across MAE, RMSE, R², and CV scores.</p>
                 </div>
                 <div class="glass rounded-xl p-5 metric-card">
                     <div class="flex items-center gap-3 mb-2">
                         <span class="text-xl">📈</span>
                         <span class="font-medium">predictions.csv</span>
                     </div>
-                    <p class="text-sm text-slate-500">Test set predictions with actual labels, predicted labels, survival probabilities, and correctness flags.</p>
+                    <p class="text-sm text-slate-500">Test set predictions with actual ratings, predicted ratings, and absolute errors.</p>
                 </div>
                 <div class="glass rounded-xl p-5 metric-card">
                     <div class="flex items-center gap-3 mb-2">
                         <span class="text-xl">🤖</span>
-                        <span class="font-medium">titanic_model.pkl</span>
+                        <span class="font-medium">movie_rating_model.pkl</span>
                     </div>
-                    <p class="text-sm text-slate-500">Serialized best model saved with Joblib for reuse and inference without retraining.</p>
+                    <p class="text-sm text-slate-500">Serialized best model saved with Joblib for reuse without retraining.</p>
                 </div>
             </div>
 
             <!-- Visualization Grid -->
-            <h3 class="text-xl font-semibold mt-10 mb-4">Generated Visualizations (13 plots)</h3>
+            <h3 class="text-xl font-semibold mt-10 mb-4">Generated Visualizations (12 plots)</h3>
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3" id="vizGrid">
             </div>
         </div>
@@ -462,11 +493,11 @@ min_samples_split: [2, 5]</code></pre>
                 <div class="space-y-4">
                     <div class="glass rounded-xl p-5">
                         <div class="flex items-center gap-3 mb-3">
-                            <span class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold text-sm">1</span>
+                            <span class="w-8 h-8 rounded-full bg-orange-500 flex items-center justify-center text-white font-bold text-sm">1</span>
                             <h4 class="font-semibold">Clone & Setup</h4>
                         </div>
-                        <pre class="code-font text-xs !p-3"><code>git clone https://github.com/yourusername/Titanic_Survival_Prediction.git
-cd Titanic_Survival_Prediction
+                        <pre class="code-font text-xs !p-3"><code>git clone https://github.com/yourusername/Movie_Rating_Prediction.git
+cd Movie_Rating_Prediction
 python -m venv venv
 source venv/bin/activate  # or venv\Scripts\activate on Windows
 pip install -r requirements.txt</code></pre>
@@ -474,18 +505,18 @@ pip install -r requirements.txt</code></pre>
 
                     <div class="glass rounded-xl p-5">
                         <div class="flex items-center gap-3 mb-3">
-                            <span class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold text-sm">2</span>
+                            <span class="w-8 h-8 rounded-full bg-orange-500 flex items-center justify-center text-white font-bold text-sm">2</span>
                             <h4 class="font-semibold">Download Dataset</h4>
                         </div>
                         <p class="text-sm text-slate-400 mb-2">
-                            Download from <a href="https://www.kaggle.com/datasets/yasserh/titanic-dataset" target="_blank" class="text-blue-400 hover:underline">Kaggle</a> 
-                            and place <code class="code-font text-green-400">Titanic-Dataset.csv</code> in the <code class="code-font text-green-400">dataset/</code> folder.
+                            Download from <a href="https://www.kaggle.com/datasets/adrianmcmahon/imdb-india-movies" target="_blank" class="text-orange-400 hover:underline">Kaggle</a> 
+                            and place <code class="code-font text-orange-400">IMDb_Movies_India.csv</code> in the <code class="code-font text-orange-400">dataset/</code> folder.
                         </p>
                     </div>
 
                     <div class="glass rounded-xl p-5">
                         <div class="flex items-center gap-3 mb-3">
-                            <span class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold text-sm">3</span>
+                            <span class="w-8 h-8 rounded-full bg-orange-500 flex items-center justify-center text-white font-bold text-sm">3</span>
                             <h4 class="font-semibold">Run the Pipeline</h4>
                         </div>
                         <pre class="code-font text-xs !p-3"><code>python main.py</code></pre>
@@ -494,11 +525,11 @@ pip install -r requirements.txt</code></pre>
 
                     <div class="glass rounded-xl p-5">
                         <div class="flex items-center gap-3 mb-3">
-                            <span class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold text-sm">4</span>
+                            <span class="w-8 h-8 rounded-full bg-orange-500 flex items-center justify-center text-white font-bold text-sm">4</span>
                             <h4 class="font-semibold">Or Run Notebook</h4>
                         </div>
                         <pre class="code-font text-xs !p-3"><code>cd notebook
-jupyter notebook Titanic_Survival_Prediction.ipynb</code></pre>
+jupyter notebook Movie_Rating_Prediction.ipynb</code></pre>
                     </div>
                 </div>
 
@@ -506,7 +537,7 @@ jupyter notebook Titanic_Survival_Prediction.ipynb</code></pre>
                 <div class="glass rounded-2xl p-6">
                     <h4 class="font-semibold mb-4 flex items-center gap-2">
                         <span class="text-xl">⚡</span>
-                        What <code class="code-font text-blue-400">python main.py</code> does
+                        What <code class="code-font text-orange-400">python main.py</code> does
                     </h4>
                     <div class="space-y-2 text-sm" id="pipelineChecklist">
                     </div>
@@ -519,10 +550,10 @@ jupyter notebook Titanic_Survival_Prediction.ipynb</code></pre>
     <footer class="py-10 px-4 border-t border-slate-800">
         <div class="max-w-6xl mx-auto text-center">
             <p class="text-slate-500 text-sm">
-                Built as part of the <strong class="text-slate-400">CodSoft Data Science Internship</strong> — Task 1
+                Built as part of the <strong class="text-slate-400">CodSoft Data Science Internship</strong> — Task 2
             </p>
             <p class="text-slate-600 text-xs mt-2">
-                Python • Pandas • NumPy • Scikit-Learn • Matplotlib • Seaborn • Joblib
+                Python • Pandas • NumPy • Scikit-Learn • Matplotlib • Seaborn • Regression
             </p>
         </div>
     </footer>
@@ -530,29 +561,26 @@ jupyter notebook Titanic_Survival_Prediction.ipynb</code></pre>
     <script>
         // Data
         const features = [
-            { col: "PassengerId", type: "int64", desc: "Unique passenger identifier", missing: "0%" },
-            { col: "Survived", type: "int64", desc: "Survival (0 = No, 1 = Yes) — TARGET", missing: "0%" },
-            { col: "Pclass", type: "int64", desc: "Ticket class (1st, 2nd, 3rd)", missing: "0%" },
-            { col: "Name", type: "object", desc: "Passenger full name", missing: "0%" },
-            { col: "Sex", type: "object", desc: "Gender (male/female)", missing: "0%" },
-            { col: "Age", type: "float64", desc: "Age in years", missing: "19.9%" },
-            { col: "SibSp", type: "int64", desc: "# siblings/spouses aboard", missing: "0%" },
-            { col: "Parch", type: "int64", desc: "# parents/children aboard", missing: "0%" },
-            { col: "Ticket", type: "object", desc: "Ticket number", missing: "0%" },
-            { col: "Fare", type: "float64", desc: "Passenger fare ($)", missing: "0%" },
-            { col: "Cabin", type: "object", desc: "Cabin number", missing: "77.1%" },
-            { col: "Embarked", type: "object", desc: "Port (C=Cherbourg, Q=Queenstown, S=Southampton)", missing: "0.2%" },
+            { col: "Name", type: "string", desc: "Movie title" },
+            { col: "Year", type: "string", desc: "Release year (may contain ranges)" },
+            { col: "Duration", type: "string", desc: "Runtime (e.g., '120 min')" },
+            { col: "Genre", type: "string", desc: "Movie genre(s), comma-separated" },
+            { col: "Rating", type: "float", desc: "IMDb rating (0-10) — TARGET" },
+            { col: "Votes", type: "string", desc: "Number of user votes" },
+            { col: "Director", type: "string", desc: "Director name" },
+            { col: "Actor 1", type: "string", desc: "Lead actor" },
+            { col: "Actor 2", type: "string", desc: "Supporting actor" },
+            { col: "Actor 3", type: "string", desc: "Supporting actor" },
         ];
 
         const featureTableBody = document.getElementById("featureTable");
         features.forEach(f => {
-            const missingClass = f.missing !== "0%" ? "text-amber-400" : "text-green-400";
+            const isTarget = f.desc.includes("TARGET");
             featureTableBody.innerHTML += `
                 <tr class="border-b border-slate-700/30 hover:bg-slate-800/30">
-                    <td class="py-2.5 px-2 font-medium code-font text-blue-300">${f.col}</td>
+                    <td class="py-2.5 px-2 font-medium code-font ${isTarget ? 'text-orange-400' : 'text-blue-300'}">${f.col}</td>
                     <td class="py-2.5 px-2 text-slate-500 code-font text-xs">${f.type}</td>
                     <td class="py-2.5 px-2 text-slate-400">${f.desc}</td>
-                    <td class="py-2.5 px-2 ${missingClass} font-medium">${f.missing}</td>
                 </tr>`;
         });
 
@@ -560,14 +588,16 @@ jupyter notebook Titanic_Survival_Prediction.ipynb</code></pre>
         const pipelineSteps = [
             { icon: "📥", title: "Load Data", desc: "Read CSV" },
             { icon: "🔍", title: "Explore", desc: "EDA & Viz" },
-            { icon: "🧹", title: "Clean", desc: "Impute & Encode" },
-            { icon: "⚙️", title: "Engineer", desc: "New Features" },
+            { icon: "🧹", title: "Clean", desc: "Preprocess" },
+            { icon: "⚙️", title: "Engineer", desc: "12+ Features" },
             { icon: "📐", title: "Scale", desc: "StandardScaler" },
-            { icon: "🤖", title: "Train", desc: "6 Models" },
-            { icon: "⚖️", title: "Compare", desc: "CV Scores" },
+            { icon: "🤖", title: "Train", desc: "6 Regressors" },
+            { icon: "⚖️", title: "Compare", desc: "CV R² Scores" },
             { icon: "🔧", title: "Tune", desc: "GridSearchCV" },
-            { icon: "📊", title: "Evaluate", desc: "Full Metrics" },
+            { icon: "📊", title: "Evaluate", desc: "MAE, RMSE, R²" },
             { icon: "💾", title: "Save", desc: "Model + Outputs" },
+            { icon: "🎯", title: "Predict", desc: "Demo Movies" },
+            { icon: "✅", title: "Done", desc: "Ready!" },
         ];
 
         const pipelineContainer = document.getElementById("pipelineSteps");
@@ -582,13 +612,16 @@ jupyter notebook Titanic_Survival_Prediction.ipynb</code></pre>
 
         // Feature Engineering List
         const engineeredFeatures = [
-            { name: "Title", desc: "Extracted from Name — encodes social status & gender", color: "blue" },
-            { name: "FamilySize", desc: "SibSp + Parch + 1 — family dynamics affect survival", color: "green" },
-            { name: "IsAlone", desc: "Binary flag — solo travelers had lower survival", color: "yellow" },
-            { name: "CabinAvailable", desc: "Binary flag — proxy for socio-economic status", color: "purple" },
-            { name: "TicketFrequency", desc: "Shared tickets indicate group travel dynamics", color: "pink" },
-            { name: "FareCategory", desc: "Binned fare (4 groups) — reduces outlier noise", color: "orange" },
-            { name: "AgeCategory", desc: "Child/Teen/Adult/Senior — captures non-linear patterns", color: "cyan" },
+            { name: "PrimaryGenre", desc: "First listed genre — simplifies multi-genre movies", color: "orange" },
+            { name: "GenreCount", desc: "Number of genres — multi-genre patterns", color: "yellow" },
+            { name: "Director_Encoded", desc: "Top 50 directors encoded — director reputation", color: "green" },
+            { name: "Director_AvgRating", desc: "Mean rating per director — quality signal", color: "blue" },
+            { name: "LeadActor_Encoded", desc: "Top 100 actors encoded — star power", color: "purple" },
+            { name: "LeadActor_AvgRating", desc: "Mean rating per actor — actor quality", color: "pink" },
+            { name: "Decade & MovieAge", desc: "Temporal patterns — era effects on ratings", color: "cyan" },
+            { name: "Votes_Log", desc: "Log-transformed votes — normalizes skewed distribution", color: "red" },
+            { name: "VoteCategory", desc: "Binned vote counts — popularity signal", color: "indigo" },
+            { name: "DurationCategory", desc: "Short/Standard/Long/VeryLong — runtime patterns", color: "emerald" },
         ];
 
         const featureEngContainer = document.getElementById("featureEngList");
@@ -605,11 +638,11 @@ jupyter notebook Titanic_Survival_Prediction.ipynb</code></pre>
 
         // File Tree
         const fileTree = [
-            { name: "Titanic_Survival_Prediction/", indent: 0, type: "dir" },
+            { name: "Movie_Rating_Prediction/", indent: 0, type: "dir" },
             { name: "dataset/", indent: 1, type: "dir" },
-            { name: "Titanic-Dataset.csv", indent: 2, type: "csv" },
+            { name: "IMDb_Movies_India.csv", indent: 2, type: "csv" },
             { name: "notebook/", indent: 1, type: "dir" },
-            { name: "Titanic_Survival_Prediction.ipynb", indent: 2, type: "notebook" },
+            { name: "Movie_Rating_Prediction.ipynb", indent: 2, type: "notebook" },
             { name: "src/", indent: 1, type: "dir" },
             { name: "__init__.py", indent: 2, type: "py" },
             { name: "preprocessing.py", indent: 2, type: "py" },
@@ -619,12 +652,12 @@ jupyter notebook Titanic_Survival_Prediction.ipynb</code></pre>
             { name: "prediction.py", indent: 2, type: "py" },
             { name: "utils.py", indent: 2, type: "py" },
             { name: "models/", indent: 1, type: "dir" },
-            { name: "titanic_model.pkl", indent: 2, type: "model" },
+            { name: "movie_rating_model.pkl", indent: 2, type: "model" },
             { name: "outputs/", indent: 1, type: "dir" },
-            { name: "confusion_matrix.png", indent: 2, type: "img" },
-            { name: "roc_curve.png", indent: 2, type: "img" },
+            { name: "prediction_vs_actual.png", indent: 2, type: "img" },
             { name: "feature_importance.png", indent: 2, type: "img" },
-            { name: "correlation_heatmap.png", indent: 2, type: "img" },
+            { name: "residual_plot.png", indent: 2, type: "img" },
+            { name: "rating_distribution.png", indent: 2, type: "img" },
             { name: "predictions.csv", indent: 2, type: "csv" },
             { name: "model_comparison.csv", indent: 2, type: "csv" },
             { name: "main.py", indent: 1, type: "py" },
@@ -647,7 +680,6 @@ jupyter notebook Titanic_Survival_Prediction.ipynb</code></pre>
         const fileTreeContainer = document.getElementById("fileTree");
         fileTree.forEach(f => {
             const pad = f.indent * 24;
-            const prefix = f.indent > 0 ? (f.type === "dir" ? "├── " : "├── ") : "";
             fileTreeContainer.innerHTML += `
                 <div class="file-tree-item py-1 px-3 rounded" style="padding-left: ${pad + 12}px">
                     <span class="mr-2">${icons[f.type]}</span>
@@ -657,21 +689,23 @@ jupyter notebook Titanic_Survival_Prediction.ipynb</code></pre>
 
         // Model Cards
         const models = [
-            { name: "Logistic Regression", icon: "📈", desc: "Linear classifier — strong baseline for binary problems. Fast, interpretable, works well with scaled features.", color: "blue" },
-            { name: "Decision Tree", icon: "🌳", desc: "Non-linear, interpretable tree structure. Prone to overfitting but captures complex patterns.", color: "green" },
+            { name: "Linear Regression", icon: "📈", desc: "Simple linear baseline. Fast, interpretable, assumes linear relationships between features and target.", color: "blue" },
+            { name: "Ridge Regression", icon: "🔷", desc: "L2 regularized linear model. Reduces overfitting by penalizing large coefficients.", color: "cyan" },
+            { name: "Lasso Regression", icon: "🔶", desc: "L1 regularized linear model. Can perform feature selection by driving some coefficients to zero.", color: "yellow" },
+            { name: "Decision Tree", icon: "🌳", desc: "Non-linear, interpretable tree structure. Captures complex patterns but prone to overfitting.", color: "green" },
             { name: "Random Forest", icon: "🌲", desc: "Ensemble of decision trees. Reduces overfitting through bagging and feature randomization.", color: "emerald" },
-            { name: "Gradient Boosting", icon: "🚀", desc: "Sequential ensemble — each tree corrects previous errors. Often achieves highest accuracy.", color: "purple" },
-            { name: "K-Nearest Neighbors", icon: "🎯", desc: "Instance-based learning. Classifies by majority vote of k nearest training examples.", color: "orange" },
-            { name: "Support Vector Machine", icon: "⚡", desc: "Finds optimal hyperplane separating classes. Effective in high-dimensional spaces.", color: "pink" },
+            { name: "Gradient Boosting", icon: "🚀", desc: "Sequential ensemble — each tree corrects previous errors. Often achieves best performance.", color: "orange" },
         ];
 
         const modelCardsContainer = document.getElementById("modelCards");
         models.forEach(m => {
+            const isBest = m.name === "Gradient Boosting";
             modelCardsContainer.innerHTML += `
-                <div class="glass rounded-xl p-5 metric-card">
+                <div class="glass rounded-xl p-5 metric-card ${isBest ? 'border-orange-500/50 glow-orange' : ''}">
                     <div class="flex items-center gap-3 mb-3">
                         <span class="text-2xl">${m.icon}</span>
                         <h4 class="font-semibold">${m.name}</h4>
+                        ${isBest ? '<span class="text-xs px-2 py-0.5 rounded-full bg-orange-500/20 text-orange-400">Best</span>' : ''}
                     </div>
                     <p class="text-sm text-slate-400">${m.desc}</p>
                 </div>`;
@@ -679,12 +713,12 @@ jupyter notebook Titanic_Survival_Prediction.ipynb</code></pre>
 
         // Metrics
         const metrics = [
-            { name: "Accuracy", desc: "Overall proportion of correct predictions. Simple and intuitive but can be misleading with imbalanced classes.", icon: "🎯" },
-            { name: "Precision", desc: "Of those predicted as survived, how many actually survived. Important when false positives are costly.", icon: "🔍" },
-            { name: "Recall", desc: "Of those who actually survived, how many were correctly identified. Important when missing survivors is costly.", icon: "📡" },
-            { name: "F1 Score", desc: "Harmonic mean of precision and recall. Balances both metrics into a single number.", icon: "⚖️" },
-            { name: "ROC-AUC", desc: "Area under the ROC curve. Measures the model's ability to distinguish between classes across all thresholds.", icon: "📈" },
-            { name: "Cross-Validation", desc: "5-fold CV average accuracy. Measures how well the model generalizes to unseen data.", icon: "🔄" },
+            { name: "MAE", desc: "Mean Absolute Error — Average absolute difference between predicted and actual ratings. Easy to interpret, in rating units.", icon: "📏" },
+            { name: "MSE", desc: "Mean Squared Error — Average squared difference. Penalizes larger errors more heavily than smaller ones.", icon: "📐" },
+            { name: "RMSE", desc: "Root Mean Squared Error — Square root of MSE. Same units as rating (0-10), interpretable as typical error.", icon: "📊" },
+            { name: "R² Score", desc: "Coefficient of Determination — Proportion of variance explained by the model. Ranges from 0 to 1; higher is better.", icon: "🎯" },
+            { name: "CV R²", desc: "Cross-Validation R² — Average R² across 5 folds. Measures how well the model generalizes to unseen data.", icon: "🔄" },
+            { name: "Residuals", desc: "Actual - Predicted values. Should be centered around zero with no patterns for a good model.", icon: "📉" },
         ];
 
         const metricsContainer = document.getElementById("metricsGrid");
@@ -702,8 +736,8 @@ jupyter notebook Titanic_Survival_Prediction.ipynb</code></pre>
         // Code Tabs
         const codeFiles = {
             "main.py": `"""
-Titanic Survival Prediction — Main Pipeline
-CodSoft Data Science Internship — Task 1
+Movie Rating Prediction — Main Pipeline
+CodSoft Data Science Internship — Task 2
 """
 
 import sys, warnings
@@ -714,11 +748,11 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 warnings.filterwarnings("ignore")
 
-from src.utils import setup_directories, load_dataset, dataset_overview, print_section
-from src.preprocessing import full_preprocessing_pipeline, encode_categorical, drop_unnecessary_columns, scale_features
-from src.feature_engineering import full_feature_engineering
+from src.utils import setup_directories, load_dataset, dataset_overview
+from src.preprocessing import full_preprocessing_pipeline, scale_features, apply_scaler
+from src.feature_engineering import full_feature_engineering, get_feature_columns
 from src.model_training import split_data, train_and_compare, hyperparameter_tuning, save_model
-from src.evaluation import full_evaluation, plot_confusion_matrix, plot_roc_curve, plot_feature_importance, generate_eda_plots
+from src.evaluation import full_evaluation, plot_prediction_vs_actual, plot_residuals, plot_feature_importance, generate_eda_plots
 from src.prediction import generate_predictions_csv, demo_predictions
 
 
@@ -726,29 +760,29 @@ def main():
     setup_directories()
     
     # Load & Explore
-    df = load_dataset("Titanic-Dataset.csv")
-    dataset_overview(df)
-    generate_eda_plots(df)
+    df_raw = load_dataset()
+    dataset_overview(df_raw)
+    generate_eda_plots(df_raw)
     
     # Preprocess & Engineer
-    df = full_preprocessing_pipeline(df)
+    df = full_preprocessing_pipeline(df_raw.copy())
     df = full_feature_engineering(df)
-    df = encode_categorical(df)
-    df = drop_unnecessary_columns(df)
     
     # Train-Test Split & Scale
     X_train, X_test, y_train, y_test = split_data(df)
     X_train_scaled, scaler = scale_features(X_train)
-    X_test_scaled = pd.DataFrame(scaler.transform(X_test), columns=X_train.columns, index=X_test.index)
+    X_test_scaled = apply_scaler(X_test, scaler)
     
     # Train, Compare, Tune
     comparison_df = train_and_compare(X_train_scaled, X_test_scaled, y_train, y_test)
-    best_model, best_name, best_params, best_cv = hyperparameter_tuning(X_train_scaled, y_train, comparison_df)
+    best_model, best_name, best_params, best_cv = hyperparameter_tuning(
+        X_train_scaled, y_train, comparison_df
+    )
     
     # Evaluate & Save
     metrics = full_evaluation(best_model, X_test_scaled, y_test, X_train_scaled, y_train, best_name)
-    plot_confusion_matrix(best_model, X_test_scaled, y_test)
-    plot_roc_curve(best_model, X_test_scaled, y_test)
+    plot_prediction_vs_actual(best_model, X_test_scaled, y_test)
+    plot_residuals(best_model, X_test_scaled, y_test)
     plot_feature_importance(best_model, list(X_train.columns))
     save_model(best_model)
     generate_predictions_csv(best_model, X_test_scaled, y_test)
@@ -757,121 +791,111 @@ def main():
 if __name__ == "__main__":
     main()`,
 
-            "preprocessing.py": `"""Data preprocessing module — handles missing values, encoding, scaling."""
+            "preprocessing.py": `"""Data preprocessing module — handles cleaning, encoding, scaling."""
 
 import pandas as pd
 import numpy as np
-from sklearn.preprocessing import LabelEncoder, StandardScaler
+import re
+from sklearn.preprocessing import StandardScaler
 
 
-def handle_missing_values(df: pd.DataFrame) -> pd.DataFrame:
+def clean_year(df):
+    \"\"\"Extract first 4-digit year from Year column.\"\"\"
     df = df.copy()
-    # Age: median by Pclass & Sex (correlated with age distribution)
-    df["Age"] = df.groupby(["Pclass", "Sex"])["Age"].transform(
-        lambda x: x.fillna(x.median())
-    )
-    df["Age"].fillna(df["Age"].median(), inplace=True)
-    
-    # Embarked: mode imputation (only 2 missing)
-    df["Embarked"].fillna(df["Embarked"].mode()[0], inplace=True)
-    
-    # Fare: median by Pclass
-    if df["Fare"].isnull().any():
-        df["Fare"] = df.groupby("Pclass")["Fare"].transform(lambda x: x.fillna(x.median()))
-    
-    # Cabin: mark as Unknown (77% missing)
-    df["Cabin"].fillna("Unknown", inplace=True)
+    def extract_year(val):
+        if pd.isna(val): return np.nan
+        match = re.search(r'(\\d{4})', str(val))
+        return int(match.group(1)) if match else np.nan
+    df["Year"] = df["Year"].apply(extract_year)
     return df
 
 
-def encode_categorical(df: pd.DataFrame) -> pd.DataFrame:
+def clean_duration(df):
+    \"\"\"Extract numeric minutes from Duration column.\"\"\"
     df = df.copy()
-    le_sex = LabelEncoder()
-    df["Sex"] = le_sex.fit_transform(df["Sex"])
-    
-    embarked_dummies = pd.get_dummies(df["Embarked"], prefix="Embarked", dtype=int)
-    df = pd.concat([df, embarked_dummies], axis=1)
-    df.drop("Embarked", axis=1, inplace=True)
-    
-    if "Title" in df.columns:
-        le_title = LabelEncoder()
-        df["Title"] = le_title.fit_transform(df["Title"])
+    def extract_minutes(val):
+        if pd.isna(val): return np.nan
+        match = re.search(r'(\\d+)', str(val))
+        return int(match.group(1)) if match else np.nan
+    df["Duration_Minutes"] = df["Duration"].apply(extract_minutes)
     return df
 
 
-def scale_features(X: pd.DataFrame) -> tuple:
+def clean_votes(df):
+    \"\"\"Remove comma separators from Votes column.\"\"\"
+    df = df.copy()
+    def extract_votes(val):
+        if pd.isna(val): return np.nan
+        val_str = re.sub(r'[^\\d]', '', str(val))
+        return int(val_str) if val_str else np.nan
+    df["Votes"] = df["Votes"].apply(extract_votes)
+    return df
+
+
+def scale_features(X):
     scaler = StandardScaler()
     X_scaled = pd.DataFrame(scaler.fit_transform(X), columns=X.columns, index=X.index)
     return X_scaled, scaler`,
 
-            "feature_engineering.py": `"""Feature engineering — creates new predictive features."""
+            "feature_engineering.py": `"""Feature engineering — creates predictive features."""
 
 import pandas as pd
 import numpy as np
+from sklearn.preprocessing import LabelEncoder
 
 
-def extract_title(df):
+def encode_primary_genre(df):
+    \"\"\"Extract and encode primary genre.\"\"\"
     df = df.copy()
-    df["Title"] = df["Name"].str.extract(r" ([A-Za-z]+)\\\\.", expand=False)
-    title_map = {
-        "Mr": "Mr", "Miss": "Miss", "Mrs": "Mrs", "Master": "Master",
-        "Dr": "Rare", "Rev": "Rare", "Col": "Rare", "Major": "Rare",
-        "Mlle": "Miss", "Ms": "Miss", "Mme": "Mrs", "Capt": "Rare",
-        "Sir": "Rare", "Lady": "Rare", "Don": "Rare", "Dona": "Rare",
-        "Countess": "Rare", "Jonkheer": "Rare"
-    }
-    df["Title"] = df["Title"].map(title_map).fillna("Rare")
+    df["PrimaryGenre"] = df["Genre"].apply(lambda x: str(x).split(",")[0].strip())
+    le = LabelEncoder()
+    df["PrimaryGenre_Encoded"] = le.fit_transform(df["PrimaryGenre"])
     return df
 
 
-def create_family_features(df):
+def encode_director_popularity(df, top_n=50):
+    \"\"\"Encode directors based on movie count.\"\"\"
     df = df.copy()
-    df["FamilySize"] = df["SibSp"] + df["Parch"] + 1
-    df["IsAlone"] = (df["FamilySize"] == 1).astype(int)
+    top_directors = df["Director"].value_counts().head(top_n).index.tolist()
+    df["Director_Category"] = df["Director"].apply(lambda x: x if x in top_directors else "Other")
+    le = LabelEncoder()
+    df["Director_Encoded"] = le.fit_transform(df["Director_Category"])
     return df
 
 
-def create_cabin_available(df):
+def calculate_director_avg_rating(df):
+    \"\"\"Calculate average rating per director.\"\"\"
     df = df.copy()
-    df["CabinAvailable"] = (df["Cabin"] != "Unknown").astype(int)
+    director_avg = df.groupby("Director")["Rating"].mean().to_dict()
+    df["Director_AvgRating"] = df["Director"].map(director_avg)
+    df["Director_AvgRating"].fillna(df["Rating"].mean(), inplace=True)
     return df
 
 
-def create_ticket_frequency(df):
+def log_transform_votes(df):
+    \"\"\"Apply log transformation to votes.\"\"\"
     df = df.copy()
-    df["TicketFrequency"] = df["Ticket"].map(df["Ticket"].value_counts())
-    return df
-
-
-def create_binned_features(df):
-    df = df.copy()
-    df["FareCategory"] = pd.qcut(df["Fare"], 4, labels=["Low","Medium","High","VeryHigh"]).astype(str)
-    df["AgeCategory"] = pd.cut(df["Age"], [0,12,18,60,100], labels=["Child","Teen","Adult","Senior"]).astype(str)
-    for col in ["FareCategory", "AgeCategory"]:
-        dummies = pd.get_dummies(df[col], prefix=col, dtype=int)
-        df = pd.concat([df, dummies], axis=1)
-        df.drop(col, axis=1, inplace=True)
+    df["Votes_Log"] = np.log1p(df["Votes"])
     return df`,
 
-            "model_training.py": `"""Model training — trains 6 classifiers, compares, and tunes."""
+            "model_training.py": `"""Model training — trains 6 regressors, compares, and tunes."""
 
-from sklearn.linear_model import LogisticRegression
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.svm import SVC
-from sklearn.model_selection import train_test_split, cross_val_score, GridSearchCV
+from sklearn.linear_model import LinearRegression, Ridge, Lasso
+from sklearn.tree import DecisionTreeRegressor
+from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
+from sklearn.model_selection import train_test_split, cross_val_score, GridSearchCV, KFold
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 import joblib
 
 
 def get_models():
     return {
-        "Logistic Regression": LogisticRegression(max_iter=1000, random_state=42),
-        "Decision Tree": DecisionTreeClassifier(random_state=42),
-        "Random Forest": RandomForestClassifier(n_estimators=100, random_state=42),
-        "Gradient Boosting": GradientBoostingClassifier(n_estimators=100, random_state=42),
-        "KNN": KNeighborsClassifier(n_neighbors=5),
-        "SVM": SVC(kernel="rbf", probability=True, random_state=42),
+        "Linear Regression": LinearRegression(),
+        "Ridge Regression": Ridge(alpha=1.0, random_state=42),
+        "Lasso Regression": Lasso(alpha=0.1, random_state=42),
+        "Decision Tree": DecisionTreeRegressor(random_state=42),
+        "Random Forest": RandomForestRegressor(n_estimators=100, random_state=42),
+        "Gradient Boosting": GradientBoostingRegressor(n_estimators=100, random_state=42),
     }
 
 
@@ -880,106 +904,97 @@ def train_and_compare(X_train, X_test, y_train, y_test):
     results = []
     for name, model in models.items():
         model.fit(X_train, y_train)
-        train_acc = model.score(X_train, y_train)
-        test_acc = accuracy_score(y_test, model.predict(X_test))
-        cv = cross_val_score(model, X_train, y_train, cv=5)
-        results.append({
-            "Model": name, "Train Accuracy": train_acc,
-            "Test Accuracy": test_acc, "CV Mean": cv.mean(), "CV Std": cv.std()
-        })
-    return pd.DataFrame(results).sort_values("CV Mean", ascending=False)
+        y_pred = model.predict(X_test)
+        mae = mean_absolute_error(y_test, y_pred)
+        rmse = np.sqrt(mean_squared_error(y_test, y_pred))
+        r2 = r2_score(y_test, y_pred)
+        cv_scores = cross_val_score(model, X_train, y_train, cv=5, scoring="r2")
+        results.append({"Model": name, "MAE": mae, "RMSE": rmse, "R²": r2, "CV R²": cv_scores.mean()})
+    return pd.DataFrame(results).sort_values("CV R²", ascending=False)`,
 
+            "evaluation.py": `"""Model evaluation — metrics, prediction vs actual, residuals, feature importance."""
 
-def hyperparameter_tuning(X_train, y_train, comparison_df):
-    top_models = comparison_df.head(2)["Model"].tolist()
-    # GridSearchCV on each top model with tailored param grids
-    # Returns: best_model, best_name, best_params, best_score
-    ...`,
-
-            "evaluation.py": `"""Model evaluation — metrics, confusion matrix, ROC curve, feature importance."""
-
-from sklearn.metrics import (
-    accuracy_score, precision_score, recall_score, f1_score,
-    roc_auc_score, roc_curve, confusion_matrix, classification_report
-)
 import matplotlib.pyplot as plt
 import seaborn as sns
+import numpy as np
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 
 
 def full_evaluation(model, X_test, y_test, X_train, y_train, model_name):
     y_pred = model.predict(X_test)
-    y_proba = model.predict_proba(X_test)[:, 1]
-    
     metrics = {
-        "Accuracy": accuracy_score(y_test, y_pred),
-        "Precision": precision_score(y_test, y_pred),
-        "Recall": recall_score(y_test, y_pred),
-        "F1 Score": f1_score(y_test, y_pred),
-        "ROC-AUC": roc_auc_score(y_test, y_proba),
+        "Model": model_name,
+        "MAE": mean_absolute_error(y_test, y_pred),
+        "MSE": mean_squared_error(y_test, y_pred),
+        "RMSE": np.sqrt(mean_squared_error(y_test, y_pred)),
+        "R²": r2_score(y_test, y_pred),
     }
     return metrics
 
 
-def plot_confusion_matrix(model, X_test, y_test):
-    cm = confusion_matrix(y_test, model.predict(X_test))
-    fig, ax = plt.subplots(figsize=(8, 6))
-    sns.heatmap(cm, annot=True, fmt="d", cmap="Blues",
-                xticklabels=["Not Survived", "Survived"],
-                yticklabels=["Not Survived", "Survived"])
-    ax.set_title("Confusion Matrix")
-    fig.savefig("outputs/confusion_matrix.png", dpi=150, bbox_inches="tight")
+def plot_prediction_vs_actual(model, X_test, y_test):
+    y_pred = model.predict(X_test)
+    fig, ax = plt.subplots(figsize=(10, 8))
+    ax.scatter(y_test, y_pred, alpha=0.5)
+    ax.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], 'r--')
+    ax.set_xlabel("Actual Rating")
+    ax.set_ylabel("Predicted Rating")
+    ax.set_title("Prediction vs Actual")
+    fig.savefig("outputs/prediction_vs_actual.png", dpi=150, bbox_inches="tight")
 
 
-def plot_roc_curve(model, X_test, y_test):
-    y_proba = model.predict_proba(X_test)[:, 1]
-    fpr, tpr, _ = roc_curve(y_test, y_proba)
-    auc = roc_auc_score(y_test, y_proba)
-    fig, ax = plt.subplots(figsize=(8, 6))
-    ax.plot(fpr, tpr, label=f"AUC = {auc:.4f}")
-    ax.plot([0,1], [0,1], "--", color="gray")
-    ax.set_title("ROC Curve")
-    ax.legend()
-    fig.savefig("outputs/roc_curve.png", dpi=150, bbox_inches="tight")`,
+def plot_residuals(model, X_test, y_test):
+    y_pred = model.predict(X_test)
+    residuals = y_test - y_pred
+    fig, axes = plt.subplots(1, 2, figsize=(14, 5))
+    axes[0].scatter(y_pred, residuals, alpha=0.5)
+    axes[0].axhline(y=0, color="red", linestyle="--")
+    axes[1].hist(residuals, bins=30, edgecolor="white")
+    fig.savefig("outputs/residual_plot.png", dpi=150, bbox_inches="tight")`,
 
-            "prediction.py": `"""Prediction module — accepts passenger info, returns survival prediction."""
+            "prediction.py": `"""Prediction module — accepts movie info, returns predicted rating."""
 
 import pandas as pd
+import numpy as np
 import joblib
 
 
-def predict_survival(model, feature_names, **passenger_data):
+def predict_rating(model, feature_names, **movie_data):
     \"\"\"
-    Predict survival for a single passenger.
-    Returns: prediction label and probability.
+    Predict rating for a single movie.
     
     Example:
-        result = predict_survival(
+        result = predict_rating(
             model, feature_names,
-            pclass=1, sex=0, age=29, fare=211.3, ...
+            Year=2020, Duration_Minutes=150, Votes=100000, ...
         )
-        # {'Prediction': 'Survived', 'Probability': '91.43%'}
+        # {'Predicted_Rating': 7.45, 'Rating_Category': 'Good'}
     \"\"\"
-    input_data = {feat: passenger_data.get(feat, 0) for feat in feature_names}
+    input_data = {feat: movie_data.get(feat, 0) for feat in feature_names}
     X = pd.DataFrame([input_data])
     
     prediction = model.predict(X)[0]
-    probability = model.predict_proba(X)[0]
+    prediction = np.clip(prediction, 0, 10)
+    
+    if prediction >= 8.0: category = "Excellent"
+    elif prediction >= 7.0: category = "Good"
+    elif prediction >= 6.0: category = "Average"
+    elif prediction >= 5.0: category = "Below Average"
+    else: category = "Poor"
     
     return {
-        "Prediction": "Survived" if prediction == 1 else "Not Survived",
-        "Probability_Survived": f"{probability[1] * 100:.2f}%",
-        "Probability_Not_Survived": f"{probability[0] * 100:.2f}%",
+        "Predicted_Rating": round(prediction, 2),
+        "Rating_Category": category,
     }
 
 
 def generate_predictions_csv(model, X_test, y_test):
     y_pred = model.predict(X_test)
-    y_proba = model.predict_proba(X_test)[:, 1]
     predictions_df = pd.DataFrame({
         "Actual": y_test.values,
-        "Predicted": y_pred,
-        "Probability_Survived": (y_proba * 100).round(2),
-        "Correct": (y_test.values == y_pred).astype(int),
+        "Predicted": np.round(y_pred, 2),
+        "Residual": np.round(y_test.values - y_pred, 2),
+        "AbsoluteError": np.round(np.abs(y_test.values - y_pred), 2),
     })
     predictions_df.to_csv("outputs/predictions.csv", index=False)`,
         };
@@ -1020,84 +1035,56 @@ def generate_predictions_csv(model, X_test, y_test):
 
         // Visualization Grid
         const visualizations = [
-            "missing_values_heatmap.png",
+            "rating_distribution.png",
+            "genre_distribution.png",
+            "movies_by_year.png",
+            "duration_distribution.png",
+            "votes_distribution.png",
+            "top_directors.png",
+            "top_actors.png",
             "correlation_heatmap.png",
-            "survival_distribution.png",
-            "pclass_distribution.png",
-            "gender_distribution.png",
-            "age_distribution.png",
-            "fare_distribution.png",
-            "survival_vs_gender.png",
-            "survival_vs_pclass.png",
-            "age_vs_survival.png",
+            "missing_values_heatmap.png",
             "feature_importance.png",
-            "roc_curve.png",
-            "confusion_matrix.png"
+            "prediction_vs_actual.png",
+            "residual_plot.png"
         ];
 
         const vizContainer = document.getElementById("vizGrid");
-
-        visualizations.forEach(file => {
-
-            const title = file
-                .replace(".png","")
-                .replace(/_/g," ")
-                .replace(/\b\w/g,l=>l.toUpperCase());
-
+        visualizations.forEach(v => {
+            const name = v.replace('.png', '').replace(/_/g, ' ');
             vizContainer.innerHTML += `
-                <div class="glass rounded-xl p-3 metric-card">
-
-                    <div class="rounded-lg overflow-hidden bg-slate-800 border border-slate-700">
-
-                        <img
-                            src="Titanic_Survival_Prediction/outputs/${file}"
-                            alt="${title}"
-                            loading="lazy"
-                            class="w-full h-44 object-contain bg-white"
-                            onerror="
-                                this.style.display='none';
-                                this.nextElementSibling.style.display='flex';
-                            "
-                        >
-
-                        <div
-                            style="display:none"
-                            class="w-full h-44 items-center justify-center bg-gradient-to-br from-slate-700 to-slate-800 text-5xl">
-                            📊
-                        </div>
-
+                <div class="glass rounded-lg p-3 text-center metric-card">
+                    <div class="w-full h-20 rounded bg-gradient-to-br from-slate-700 to-slate-800 flex items-center justify-center mb-2">
+                        <span class="text-2xl">📊</span>
                     </div>
-
-                    <p class="text-center text-sm text-slate-300 mt-3">
-                        ${title}
-                    </p>
-
-                </div>
-            `;
-
+                    <p class="text-xs text-slate-400 capitalize">${name}</p>
+                </div>`;
         });
 
         // Pipeline Checklist
         const pipelineActions = [
-            "Load Titanic-Dataset.csv from dataset/",
+            "Load IMDb_Movies_India.csv from dataset/",
             "Print dataset overview (shape, types, missing values)",
-            "Generate 10+ EDA visualizations",
-            "Handle missing values (Age, Embarked, Cabin)",
+            "Generate 12+ EDA visualizations",
+            "Clean Year (extract from ranges)",
+            "Clean Duration (extract minutes)",
+            "Clean Votes (remove commas)",
+            "Handle missing values (median/mode imputation)",
             "Remove duplicate rows",
-            "Engineer 7 new features",
-            "Encode categorical variables",
-            "Drop unnecessary columns",
-            "Split into 80% train / 20% test",
+            "Engineer 12+ features (genre, director, actor encoding)",
+            "Create temporal features (decade, movie age)",
+            "Log-transform votes for normalization",
             "Apply StandardScaler normalization",
-            "Train 6 classification models",
+            "Train 6 regression models",
             "Cross-validate and compare all models",
             "GridSearchCV on top 2 models",
-            "Full evaluation (Accuracy, Precision, Recall, F1, AUC)",
-            "Generate confusion matrix & ROC curve",
+            "Full evaluation (MAE, RMSE, R², residuals)",
+            "Generate prediction vs actual plot",
+            "Generate residual analysis plot",
             "Plot feature importance",
-            "Save best model to models/titanic_model.pkl",
+            "Save best model to models/movie_rating_model.pkl",
             "Generate predictions.csv",
-            "Run sample predictions with probabilities",
+            "Run sample predictions with rating categories",
             "Save all plots to outputs/"
         ];
 
