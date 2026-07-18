@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CODSOFT — Data Science Internship Portfolio</title>
+    <meta name="description" content="A collection of end-to-end Machine Learning projects by Anshul Verma — CodSoft Data Science Internship 2026">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /* ============ RESET & BASE ============ */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #06060f;
+            color: #e0e0f0;
+            overflow-x: hidden;
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        ::selection { background: rgba(99, 102, 241, 0.4); color: #fff; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0a0a1a; }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #6366f1, #a855f7); border-radius: 8px; }
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+        img { max-width: 100%; display: block; }
+
+        /* ============ ANIMATED BACKGROUND ============ */
+        .bg-animation {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.25;
+            animation: blobFloat 20s ease-in-out infinite alternate;
+        }
+        .blob-1 {
+            width: 600px; height: 600px;
+            background: radial-gradient(circle, #6366f1 0%, transparent 70%);
+            top: -10%; left: -10%;
+            animation-duration: 22s;
+        }
+        .blob-2 {
+            width: 500px; height: 500px;
+            background: radial-gradient(circle, #a855f7 0%, transparent 70%);
+            top: 40%; right: -15%;
+            animation-duration: 18s;
+            animation-delay: -5s;
+        }
+        .blob-3 {
+            width: 450px; height: 450px;
+            background: radial-gradient(circle, #3b82f6 0%, transparent 70%);
+            bottom: -5%; left: 30%;
+            animation-duration: 25s;
+            animation-delay: -10s;
+        }
+        .blob-4 {
+            width: 350px; height: 350px;
+            background: radial-gradient(circle, #8b5cf6 0%, transparent 70%);
+            top: 20%; left: 50%;
+            animation-duration: 20s;
+            animation-delay: -7s;
+        }
+        @keyframes blobFloat {
+            0%   { transform: translate(0, 0) scale(1) rotate(0deg); }
+            25%  { transform: translate(80px, -60px) scale(1.1) rotate(90deg); }
+            50%  { transform: translate(-40px, 80px) scale(0.95) rotate(180deg); }
+            75%  { transform: translate(60px, 40px) scale(1.08) rotate(270deg); }
+            100% { transform: translate(-60px, -40px) scale(1) rotate(360deg); }
+        }
+
+        /* Grid overlay */
+        .grid-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            background-image:
+                linear-gradient(rgba(99, 102, 241, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(99, 102, 241, 0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+        }
+
+        /* ============ CONTAINER ============ */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ============ NAVBAR ============ */
+        .navbar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 1000;
+            padding: 0 24px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .navbar.scrolled {
+            background: rgba(6, 6, 15, 0.75);
+            backdrop-filter: blur(24px) saturate(180%);
+            -webkit-backdrop-filter: blur(24px) saturate(180%);
+            border-bottom: 1px solid rgba(99, 102, 241, 0.1);
+        }
+        .navbar-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 76px;
+        }
+        .nav-logo {
+            font-size: 1.35rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #6366f1, #a855f7, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .nav-logo span { font-size: 1.5rem; -webkit-text-fill-color: initial; }
+        .nav-links { display: flex; align-items: center; gap: 36px; }
+        .nav-links a {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: rgba(224, 224, 240, 0.7);
+            transition: color 0.3s ease;
+            position: relative;
+        }
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px; left: 0;
+            width: 0; height: 2px;
+            background: linear-gradient(90deg, #6366f1, #a855f7);
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+        .nav-links a:hover { color: #fff; }
+        .nav-links a:hover::after { width: 100%; }
+
+        /* Mobile menu */
+        .mobile-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            z-index: 1001;
+        }
+        .mobile-toggle span {
+            display: block;
+            width: 24px; height: 2px;
+            background: #e0e0f0;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+        .mobile-toggle.active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        .mobile-toggle.active span:nth-child(2) { opacity: 0; }
+        .mobile-toggle.active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+        /* ============ HERO ============ */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 120px 24px 80px;
+            position: relative;
+        }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 20px;
+            border-radius: 100px;
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.25);
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #a5b4fc;
+            margin-bottom: 32px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            backdrop-filter: blur(12px);
+        }
+        .hero-badge .dot {
+            width: 8px; height: 8px;
+            background: #22c55e;
+            border-radius: 50%;
+            animation: pulse-dot 2s ease-in-out infinite;
+        }
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
+            50% { opacity: 0.7; box-shadow: 0 0 0 8px rgba(34, 197, 94, 0); }
+        }
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 900;
+            letter-spacing: -2px;
+            line-height: 1.08;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, #ffffff 0%, #c7d2fe 30%, #a5b4fc 50%, #818cf8 70%, #c084fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 6s ease-in-out infinite;
+            background-size: 200% 200%;
+        }
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        .hero p {
+            font-size: clamp(1rem, 1.8vw, 1.15rem);
+            color: rgba(224, 224, 240, 0.6);
+            max-width: 680px;
+            margin: 0 auto 48px;
+            line-height: 1.8;
+            font-weight: 400;
+        }
+        .hero-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* ============ BUTTONS ============ */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 32px;
+            border-radius: 14px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: none;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6, #a855f7);
+            color: #fff;
+            box-shadow: 0 4px 24px rgba(99, 102, 241, 0.35), inset 0 1px 0 rgba(255,255,255,0.1);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 40px rgba(99, 102, 241, 0.5), inset 0 1px 0 rgba(255,255,255,0.15);
+        }
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.04);
+            color: #e0e0f0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(12px);
+        }
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(99, 102, 241, 0.4);
+            transform: translateY(-2px);
+        }
+        .btn .ripple-effect {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(0);
+            animation: ripple 0.6s ease-out;
+            pointer-events: none;
+        }
+        @keyframes ripple {
+            to { transform: scale(4); opacity: 0; }
+        }
+
+        /* ============ SECTION STYLES ============ */
+        section { padding: 100px 0; position: relative; z-index: 1; }
+        .section-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #818cf8;
+            margin-bottom: 16px;
+        }
+        .section-label::before {
+            content: '';
+            width: 24px; height: 2px;
+            background: linear-gradient(90deg, #6366f1, #a855f7);
+            border-radius: 2px;
+        }
+        .section-title {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 800;
+            letter-spacing: -1.5px;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #fff, #c7d2fe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .section-desc {
+            color: rgba(224, 224, 240, 0.5);
+            font-size: 1.05rem;
+            max-width: 600px;
+            margin-bottom: 56px;
+        }
+
+        /* ============ STATS / SUMMARY ============ */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 0;
+        }
+        .stat-card {
+            position: relative;
+            padding: 36px 28px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(16px);
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+        }
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #6366f1, #a855f7, transparent);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        .stat-card:hover { transform: translateY(-4px); border-color: rgba(99, 102, 241, 0.2); }
+        .stat-card:hover::before { opacity: 1; }
+        .stat-value {
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+        .stat-label {
+            font-size: 0.85rem;
+            color: rgba(224, 224, 240, 0.5);
+            font-weight: 500;
+        }
+
+        /* ============ PROJECT CARDS ============ */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+        .project-card {
+            position: relative;
+            border-radius: 24px;
+            background: rgba(255, 255, 255, 0.025);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(16px);
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .project-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 24px;
+            padding: 1px;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.3), transparent, rgba(168, 85, 247, 0.3));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            pointer-events: none;
+        }
+        .project-card:hover { transform: translateY(-8px); }
+        .project-card:hover::before { opacity: 1; }
+        .project-card:hover .card-glow { opacity: 1; }
+
+        .card-glow {
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: radial-gradient(circle at center, rgba(99, 102, 241, 0.08) 0%, transparent 50%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            pointer-events: none;
+        }
+
+        .card-header {
+            padding: 32px 28px 0;
+            position: relative;
+            z-index: 1;
+        }
+        .card-task {
+            display: inline-flex;
+            padding: 4px 12px;
+            border-radius: 8px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 16px;
+        }
+        .card-task.t1 { background: rgba(59, 130, 246, 0.15); color: #60a5fa; }
+        .card-task.t2 { background: rgba(168, 85, 247, 0.15); color: #c084fc; }
+        .card-task.t5 { background: rgba(239, 68, 68, 0.15); color: #f87171; }
+
+        .card-icon {
+            width: 52px; height: 52px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+        .card-icon.i1 { background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(59, 130, 246, 0.05)); }
+        .card-icon.i2 { background: linear-gradient(135deg, rgba(168, 85, 247, 0.15), rgba(168, 85, 247, 0.05)); }
+        .card-icon.i5 { background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(239, 68, 68, 0.05)); }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 10px;
+            letter-spacing: -0.3px;
+        }
+        .card-desc {
+            font-size: 0.9rem;
+            color: rgba(224, 224, 240, 0.5);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .card-body { padding: 0 28px; position: relative; z-index: 1; }
+
+        .card-highlights {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+        .highlight-tag {
+            padding: 5px 14px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            color: rgba(224, 224, 240, 0.7);
+            transition: all 0.3s ease;
+        }
+        .highlight-tag:hover {
+            background: rgba(99, 102, 241, 0.1);
+            border-color: rgba(99, 102, 241, 0.3);
+            color: #a5b4fc;
+        }
+
+        .card-footer {
+            padding: 0 28px 28px;
+            display: flex;
+            gap: 10px;
+            position: relative;
+            z-index: 1;
+        }
+        .card-btn {
+            flex: 1;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 11px 16px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+        }
+        .card-btn-primary {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: #fff;
+        }
+        .card-btn-primary:hover { box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4); transform: translateY(-1px); }
+        .card-btn-secondary {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: rgba(224, 224, 240, 0.7);
+        }
+        .card-btn-secondary:hover { background: rgba(255, 255, 255, 0.08); color: #fff; }
+
+        /* ============ TECH STACK ============ */
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 16px;
+        }
+        .tech-item {
+            padding: 28px 16px;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.025);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(12px);
+        }
+        .tech-item:hover {
+            transform: translateY(-6px);
+            border-color: rgba(99, 102, 241, 0.25);
+            background: rgba(99, 102, 241, 0.06);
+            box-shadow: 0 12px 40px rgba(99, 102, 241, 0.1);
+        }
+        .tech-icon {
+            font-size: 2rem;
+            margin-bottom: 12px;
+            display: block;
+        }
+        .tech-name {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: rgba(224, 224, 240, 0.7);
+        }
+
+        /* ============ TIMELINE ============ */
+        .timeline {
+            position: relative;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            top: 0; bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, #6366f1, #a855f7, #3b82f6);
+            border-radius: 2px;
+        }
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 48px;
+            position: relative;
+        }
+        .timeline-item:last-child { margin-bottom: 0; }
+        .timeline-item:nth-child(odd) { flex-direction: row; }
+        .timeline-item:nth-child(even) { flex-direction: row-reverse; }
+
+        .timeline-content {
+            width: calc(50% - 40px);
+            padding: 24px 28px;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(12px);
+            transition: all 0.4s ease;
+        }
+        .timeline-content:hover {
+            border-color: rgba(99, 102, 241, 0.2);
+            transform: translateY(-2px);
+        }
+        .timeline-dot {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 16px; height: 16px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            border: 3px solid #06060f;
+            z-index: 2;
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
+        }
+        .timeline-task {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #818cf8;
+            margin-bottom: 4px;
+        }
+        .timeline-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        /* ============ REPOSITORY SECTION ============ */
+        .repo-card {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 48px;
+            border-radius: 24px;
+            background: rgba(255, 255, 255, 0.025);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(16px);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .repo-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #6366f1, #a855f7, #3b82f6);
+        }
+        .repo-icon {
+            width: 64px; height: 64px;
+            border-radius: 18px;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(168, 85, 247, 0.1));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            margin: 0 auto 24px;
+        }
+        .repo-name {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 24px;
+        }
+        .repo-stats {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            margin-bottom: 32px;
+        }
+        .repo-stat { text-align: center; }
+        .repo-stat-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #a5b4fc;
+            display: block;
+        }
+        .repo-stat-label {
+            font-size: 0.75rem;
+            color: rgba(224, 224, 240, 0.4);
+            font-weight: 500;
+        }
+
+        /* ============ FOOTER ============ */
+        .footer {
+            padding: 48px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+            z-index: 1;
+        }
+        .footer-inner {
+            text-align: center;
+        }
+        .footer-text {
+            font-size: 0.85rem;
+            color: rgba(224, 224, 240, 0.4);
+            line-height: 2;
+        }
+        .footer-text strong {
+            color: rgba(224, 224, 240, 0.7);
+            font-weight: 600;
+        }
+        .footer-grad {
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+        }
+
+        /* ============ SCROLL REVEAL ============ */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .reveal.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ============ DIVIDER ============ */
+        .section-divider {
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.15), transparent);
+            margin: 0;
+        }
+
+        /* ============ RESPONSIVE ============ */
+        @media (max-width: 1024px) {
+            .projects-grid { grid-template-columns: repeat(2, 1fr); }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                position: fixed;
+                top: 0; left: 0; right: 0; bottom: 0;
+                background: rgba(6, 6, 15, 0.95);
+                backdrop-filter: blur(24px);
+                flex-direction: column;
+                justify-content: center;
+                gap: 32px;
+                transform: translateX(100%);
+                transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            .nav-links.open { transform: translateX(0); }
+            .nav-links a { font-size: 1.2rem; }
+            .mobile-toggle { display: flex; }
+            .projects-grid { grid-template-columns: 1fr; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .hero { padding: 100px 24px 60px; }
+            .hero h1 { letter-spacing: -1px; }
+            section { padding: 60px 0; }
+            .timeline::before { left: 20px; }
+            .timeline-item { flex-direction: row !important; padding-left: 56px; }
+            .timeline-content { width: 100%; }
+            .timeline-dot { left: 20px; }
+            .repo-card { padding: 32px 24px; }
+            .tech-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid { grid-template-columns: 1fr; }
+            .hero-buttons { flex-direction: column; align-items: center; }
+            .hero-buttons .btn { width: 100%; max-width: 280px; justify-content: center; }
+            .tech-grid { grid-template-columns: repeat(3, 1fr); }
+            .repo-stats { gap: 20px; }
+        }
+
+        /* ============ PARTICLES ============ */
+        .particle {
+            position: fixed;
+            width: 2px; height: 2px;
+            background: rgba(99, 102, 241, 0.4);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Animated Background -->
+    <div class="bg-animation">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+        <div class="blob blob-4"></div>
+    </div>
+    <div class="grid-overlay"></div>
+
+    <!-- Navbar -->
+    <nav class="navbar" id="navbar">
+        <div class="navbar-inner">
+            <a href="#" class="nav-logo"><span>🚀</span> CODSOFT</a>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#overview" onclick="closeMobile()">Overview</a></li>
+                <li><a href="#projects" onclick="closeMobile()">Projects</a></li>
+                <li><a href="#skills" onclick="closeMobile()">Skills</a></li>
+                <li><a href="#repository" onclick="closeMobile()">Repository</a></li>
+            </ul>
+            <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle navigation">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero" id="overview">
+        <div class="container">
+            <div class="reveal">
+                <div class="hero-badge"><span class="dot"></span> Internship Completed</div>
+                <h1>CodSoft Data Science<br>Internship</h1>
+                <p>A collection of end-to-end Machine Learning projects demonstrating data preprocessing, exploratory data analysis, feature engineering, model training, evaluation, visualization, and deployment using Python and Scikit-Learn.</p>
+                <div class="hero-buttons">
+                    <a href="#projects" class="btn btn-primary">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+                        View Projects
+                    </a>
+                    <a href="#" class="btn btn-secondary">
+                        <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                        GitHub Repository
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Internship Summary -->
+    <section id="summary">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-card reveal">
+                    <div class="stat-value">3</div>
+                    <div class="stat-label">Completed Tasks</div>
+                </div>
+                <div class="stat-card reveal">
+                    <div class="stat-value">12+</div>
+                    <div class="stat-label">Models Built</div>
+                </div>
+                <div class="stat-card reveal">
+                    <div class="stat-value">2</div>
+                    <div class="stat-label">Classification + Regression</div>
+                </div>
+                <div class="stat-card reveal">
+                    <div class="stat-value">8+</div>
+                    <div class="stat-label">Python, Pandas, NumPy, Scikit-Learn</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- Projects -->
+    <section id="projects">
+        <div class="container">
+            <div class="reveal">
+                <div class="section-label">Portfolio</div>
+                <h2 class="section-title">Featured Projects</h2>
+                <p class="section-desc">End-to-end machine learning solutions built during the CodSoft Data Science Internship program.</p>
+            </div>
+            <div class="projects-grid">
+                <!-- Card 1 -->
+                <div class="project-card reveal">
+                    <div class="card-glow"></div>
+                    <div class="card-header">
+                        <div class="card-task t1">Task 1</div>
+                        <div class="card-icon i1">🚢</div>
+                        <h3 class="card-title">Titanic Survival Prediction</h3>
+                        <p class="card-desc">Binary Classification project predicting passenger survival.</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-highlights">
+                            <span class="highlight-tag">EDA</span>
+                            <span class="highlight-tag">Feature Engineering</span>
+                            <span class="highlight-tag">Random Forest</span>
+                            <span class="highlight-tag">Prediction Pipeline</span>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <a href="Task1_Titanic_Survival_Prediction/index.html" class="card-btn card-btn-primary">
+                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                            View Project
+                        </a>
+                        <a href="#" class="card-btn card-btn-secondary">
+                            <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                            GitHub
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="project-card reveal">
+                    <div class="card-glow"></div>
+                    <div class="card-header">
+                        <div class="card-task t2">Task 2</div>
+                        <div class="card-icon i2">🎬</div>
+                        <h3 class="card-title">Movie Rating Prediction</h3>
+                        <p class="card-desc">Regression project predicting IMDb movie ratings.</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-highlights">
+                            <span class="highlight-tag">EDA</span>
+                            <span class="highlight-tag">Regression Models</span>
+                            <span class="highlight-tag">Hyperparameter Tuning</span>
+                            <span class="highlight-tag">Prediction</span>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <a href="Task2_Movie_Rating_Prediction/index.html" class="card-btn card-btn-primary">
+                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                            View Project
+                        </a>
+                        <a href="#" class="card-btn card-btn-secondary">
+                            <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                            GitHub
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="project-card reveal">
+                    <div class="card-glow"></div>
+                    <div class="card-header">
+                        <div class="card-task t5">Task 5</div>
+                        <div class="card-icon i5">🛡️</div>
+                        <h3 class="card-title">Credit Card Fraud Detection</h3>
+                        <p class="card-desc">Fraud Detection system using highly imbalanced financial transactions.</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-highlights">
+                            <span class="highlight-tag">Class Imbalance</span>
+                            <span class="highlight-tag">Feature Engineering</span>
+                            <span class="highlight-tag">GridSearchCV</span>
+                            <span class="highlight-tag">ROC-AUC</span>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <a href="Task5_Credit_Card_Fraud_Detection/index.html" class="card-btn card-btn-primary">
+                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                            View Project
+                        </a>
+                        <a href="#" class="card-btn card-btn-secondary">
+                            <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                            GitHub
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- Tech Stack -->
+    <section id="skills">
+        <div class="container">
+            <div class="reveal" style="text-align:center;">
+                <div class="section-label" style="justify-content:center;">Technology Stack</div>
+                <h2 class="section-title">Tools & Technologies</h2>
+                <p class="section-desc" style="margin-left:auto;margin-right:auto;">Core technologies and libraries used across all internship projects.</p>
+            </div>
+            <div class="tech-grid reveal">
+                <div class="tech-item">
+                    <span class="tech-icon">🐍</span>
+                    <span class="tech-name">Python</span>
+                </div>
+                <div class="tech-item">
+                    <span class="tech-icon">🐼</span>
+                    <span class="tech-name">Pandas</span>
+                </div>
+                <div class="tech-item">
+                    <span class="tech-icon">🔢</span>
+                    <span class="tech-name">NumPy</span>
+                </div>
+                <div class="tech-item">
+                    <span class="tech-icon">⚙️</span>
+                    <span class="tech-name">Scikit-Learn</span>
+                </div>
+                <div class="tech-item">
+                    <span class="tech-icon">📊</span>
+                    <span class="tech-name">Matplotlib</span>
+                </div>
+                <div class="tech-item">
+                    <span class="tech-icon">📈</span>
+                    <span class="tech-name">Seaborn</span>
+                </div>
+                <div class="tech-item">
+                    <span class="tech-icon">📓</span>
+                    <span class="tech-name">Jupyter</span>
+                </div>
+                <div class="tech-item">
+                    <span class="tech-icon">🔀</span>
+                    <span class="tech-name">Git</span>
+                </div>
+                <div class="tech-item">
+                    <span class="tech-icon">🐙</span>
+                    <span class="tech-name">GitHub</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- Timeline -->
+    <section id="timeline">
+        <div class="container">
+            <div class="reveal" style="text-align:center;">
+                <div class="section-label" style="justify-content:center;">Journey</div>
+                <h2 class="section-title">Project Timeline</h2>
+                <p class="section-desc" style="margin-left:auto;margin-right:auto;">The progression of tasks completed during the internship.</p>
+            </div>
+            <div class="timeline reveal">
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-task">Task 1</div>
+                        <div class="timeline-title">Titanic Survival Prediction</div>
+                    </div>
+                    <div class="timeline-dot"></div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-task">Task 2</div>
+                        <div class="timeline-title">Movie Rating Prediction</div>
+                    </div>
+                    <div class="timeline-dot"></div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-task">Task 5</div>
+                        <div class="timeline-title">Credit Card Fraud Detection</div>
+                    </div>
+                    <div class="timeline-dot"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- Repository -->
+    <section id="repository">
+        <div class="container">
+            <div class="reveal" style="text-align:center;">
+                <div class="section-label" style="justify-content:center;">Source Code</div>
+                <h2 class="section-title">GitHub Repository</h2>
+                <p class="section-desc" style="margin-left:auto;margin-right:auto;">All project source code, notebooks, and documentation in one place.</p>
+            </div>
+            <div class="repo-card reveal">
+                <div class="repo-icon">📁</div>
+                <div class="repo-name">CODSOFT</div>
+                <div class="repo-stats">
+                    <div class="repo-stat">
+                        <span class="repo-stat-value">3</span>
+                        <span class="repo-stat-label">Projects</span>
+                    </div>
+                    <div class="repo-stat">
+                        <span class="repo-stat-value">Python</span>
+                        <span class="repo-stat-label">Language</span>
+                    </div>
+                    <div class="repo-stat">
+                        <span class="repo-stat-value">CodSoft</span>
+                        <span class="repo-stat-label">Data Science Internship</span>
+                    </div>
+                </div>
+                <a href="#" class="btn btn-primary" style="width:100%;justify-content:center;">
+                    <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                    Open GitHub Repository
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-inner">
+                <p class="footer-text">
+                    Built by <strong>Anshul Verma</strong><br>
+                    Computer Science (AI & ML)<br>
+                    <span class="footer-grad">CodSoft Data Science Internship</span><br>
+                    &copy; 2026
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+    (function () {
+        'use strict';
+
+        /* ========== NAVBAR SCROLL ========== */
+        const navbar = document.getElementById('navbar');
+        let lastScroll = 0;
+        function handleNavScroll() {
+            const y = window.scrollY;
+            if (y > 40) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+            lastScroll = y;
+        }
+        window.addEventListener('scroll', handleNavScroll, { passive: true });
+
+        /* ========== MOBILE MENU ========== */
+        const mobileToggle = document.getElementById('mobileToggle');
+        const navLinks = document.getElementById('navLinks');
+        mobileToggle.addEventListener('click', function () {
+            mobileToggle.classList.toggle('active');
+            navLinks.classList.toggle('open');
+            document.body.style.overflow = navLinks.classList.contains('open') ? 'hidden' : '';
+        });
+        window.closeMobile = function () {
+            mobileToggle.classList.remove('active');
+            navLinks.classList.remove('open');
+            document.body.style.overflow = '';
+        };
+
+        /* ========== SCROLL REVEAL ========== */
+        const revealEls = document.querySelectorAll('.reveal');
+        const revealObs = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('revealed');
+                    revealObs.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+        revealEls.forEach(function (el, i) {
+            el.style.transitionDelay = (i % 4) * 0.1 + 's';
+            revealObs.observe(el);
+        });
+
+        /* ========== BUTTON RIPPLE ========== */
+        document.querySelectorAll('.btn, .card-btn').forEach(function (btn) {
+            btn.addEventListener('click', function (e) {
+                var ripple = document.createElement('span');
+                ripple.classList.add('ripple-effect');
+                var rect = btn.getBoundingClientRect();
+                var size = Math.max(rect.width, rect.height);
+                ripple.style.width = ripple.style.height = size + 'px';
+                ripple.style.left = (e.clientX - rect.left - size / 2) + 'px';
+                ripple.style.top = (e.clientY - rect.top - size / 2) + 'px';
+                btn.appendChild(ripple);
+                setTimeout(function () { ripple.remove(); }, 600);
+            });
+        });
+
+        /* ========== FLOATING PARTICLES ========== */
+        function createParticles() {
+            var count = Math.min(30, Math.floor(window.innerWidth / 50));
+            for (var i = 0; i < count; i++) {
+                var p = document.createElement('div');
+                p.classList.add('particle');
+                p.style.left = Math.random() * 100 + '%';
+                p.style.top = Math.random() * 100 + '%';
+                var dur = 15 + Math.random() * 25;
+                var delay = Math.random() * -30;
+                var size = 1 + Math.random() * 2;
+                p.style.width = size + 'px';
+                p.style.height = size + 'px';
+                p.style.opacity = (0.15 + Math.random() * 0.3).toString();
+                p.style.animation = 'particleFloat ' + dur + 's ' + delay + 's linear infinite';
+                document.body.appendChild(p);
+            }
+        }
+
+        var styleSheet = document.createElement('style');
+        styleSheet.textContent = '@keyframes particleFloat { 0% { transform: translate(0, 0); opacity: 0; } 10% { opacity: 0.4; } 90% { opacity: 0.4; } 100% { transform: translate(' + (Math.random() > 0.5 ? '' : '-') + '200px, -800px); opacity: 0; } }';
+        document.head.appendChild(styleSheet);
+        createParticles();
+
+        /* ========== CARD GLOW FOLLOW MOUSE ========== */
+        document.querySelectorAll('.project-card').forEach(function (card) {
+            card.addEventListener('mousemove', function (e) {
+                var rect = card.getBoundingClientRect();
+                var x = e.clientX - rect.left;
+                var y = e.clientY - rect.top;
+                var glow = card.querySelector('.card-glow');
+                if (glow) {
+                    glow.style.background = 'radial-gradient(600px circle at ' + x + 'px ' + y + 'px, rgba(99, 102, 241, 0.1), transparent 40%)';
+                }
+            });
+        });
+
+        /* ========== SMOOTH ANCHOR ========== */
+        document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+            a.addEventListener('click', function (e) {
+                var target = document.querySelector(a.getAttribute('href'));
+                if (target) {
+                    e.preventDefault();
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        /* ========== STAT COUNTER ANIMATION ========== */
+        function animateCounters() {
+            document.querySelectorAll('.stat-value').forEach(function (el) {
+                var text = el.textContent.trim();
+                var match = text.match(/^(\d+)(\+?)$/);
+                if (!match) return;
+                var target = parseInt(match[1]);
+                var suffix = match[2] || '';
+                var duration = 1500;
+                var start = 0;
+                var startTime = null;
+                var animated = false;
+
+                var obs = new IntersectionObserver(function (entries) {
+                    if (entries[0].isIntersecting && !animated) {
+                        animated = true;
+                        function step(timestamp) {
+                            if (!startTime) startTime = timestamp;
+                            var progress = Math.min((timestamp - startTime) / duration, 1);
+                            var eased = 1 - Math.pow(1 - progress, 3);
+                            el.textContent = Math.floor(eased * target) + suffix;
+                            if (progress < 1) requestAnimationFrame(step);
+                        }
+                        requestAnimationFrame(step);
+                        obs.unobserve(el);
+                    }
+                }, { threshold: 0.5 });
+                obs.observe(el);
+            });
+        }
+        animateCounters();
+
+    })();
+    </script>
+</body>
+</html>
