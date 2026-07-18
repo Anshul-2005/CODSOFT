@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Titanic Survival Prediction — CodSoft Data Science Internship Task 1</title>
+    <meta name="description" content="Complete Machine Learning pipeline for Titanic Survival Prediction - CodSoft Data Science Internship Task 1">
+    <meta name="author" content="CodSoft Data Science Intern">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+        }
+
+        .code-font {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .glass {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(71, 85, 105, 0.4);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #60a5fa, #a78bfa, #f472b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .glow-blue {
+            box-shadow: 0 0 30px rgba(59, 130, 246, 0.15);
+        }
+
+        .glow-green {
+            box-shadow: 0 0 30px rgba(34, 197, 94, 0.15);
+        }
+
+        .tree-line {
+            border-left: 2px solid #334155;
+        }
+
+        pre {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 16px;
+            overflow-x: auto;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .tab-active {
+            background: #2563eb;
+            color: white;
+        }
+
+        .tab-inactive {
+            background: #1e293b;
+            color: #94a3b8;
+        }
+
+        .tab-inactive:hover {
+            background: #334155;
+            color: #e2e8f0;
+        }
+
+        .file-tree-item {
+            transition: background 0.15s;
+        }
+
+        .file-tree-item:hover {
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        .metric-card {
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+        }
+
+        .progress-bar {
+            transition: width 1s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-in {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+
+        .animate-delay-1 { animation-delay: 0.1s; opacity: 0; }
+        .animate-delay-2 { animation-delay: 0.2s; opacity: 0; }
+        .animate-delay-3 { animation-delay: 0.3s; opacity: 0; }
+        .animate-delay-4 { animation-delay: 0.4s; opacity: 0; }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #1e293b; }
+        ::-webkit-scrollbar-thumb { background: #475569; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #64748b; }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 glass border-b border-slate-700/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center gap-3">
+                    <span class="text-2xl">🚢</span>
+                    <span class="font-bold text-lg">Titanic Survival Prediction</span>
+                    <span class="hidden sm:inline text-xs px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-400 border border-blue-500/30">CodSoft Task 1</span>
+                </div>
+                <div class="hidden md:flex items-center gap-1">
+                    <a href="#overview" class="px-3 py-2 text-sm text-slate-400 hover:text-white transition">Overview</a>
+                    <a href="#pipeline" class="px-3 py-2 text-sm text-slate-400 hover:text-white transition">Pipeline</a>
+                    <a href="#structure" class="px-3 py-2 text-sm text-slate-400 hover:text-white transition">Structure</a>
+                    <a href="#models" class="px-3 py-2 text-sm text-slate-400 hover:text-white transition">Models</a>
+                    <a href="#code" class="px-3 py-2 text-sm text-slate-400 hover:text-white transition">Code</a>
+                    <a href="#results" class="px-3 py-2 text-sm text-slate-400 hover:text-white transition">Results</a>
+                    <a href="#run" class="px-3 py-2 text-sm text-slate-400 hover:text-white transition">How to Run</a>
+                </div>
+                <button id="mobileMenuBtn" class="md:hidden text-slate-400 hover:text-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <div id="mobileMenu" class="hidden md:hidden glass border-t border-slate-700/50 px-4 pb-4">
+            <a href="#overview" class="block py-2 text-sm text-slate-400 hover:text-white">Overview</a>
+            <a href="#pipeline" class="block py-2 text-sm text-slate-400 hover:text-white">Pipeline</a>
+            <a href="#structure" class="block py-2 text-sm text-slate-400 hover:text-white">Structure</a>
+            <a href="#models" class="block py-2 text-sm text-slate-400 hover:text-white">Models</a>
+            <a href="#code" class="block py-2 text-sm text-slate-400 hover:text-white">Code</a>
+            <a href="#results" class="block py-2 text-sm text-slate-400 hover:text-white">Results</a>
+            <a href="#run" class="block py-2 text-sm text-slate-400 hover:text-white">How to Run</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="pt-28 pb-16 px-4">
+        <div class="max-w-5xl mx-auto text-center">
+            <div class="animate-in animate-delay-1">
+                <p class="text-blue-400 font-medium tracking-wider uppercase text-sm mb-4">CodSoft Data Science Internship • Task 1</p>
+                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black mb-6 gradient-text leading-tight">
+                    Titanic Survival<br>Prediction
+                </h1>
+                <p class="text-slate-400 text-lg max-w-2xl mx-auto mb-8 leading-relaxed">
+                    A complete Machine Learning pipeline — from raw data to trained model — that predicts
+                    passenger survival on the RMS Titanic using 6 classification algorithms with hyperparameter tuning.
+                </p>
+            </div>
+            <div class="animate-in animate-delay-2 flex flex-wrap justify-center gap-3 mb-12">
+                <span class="px-3 py-1.5 rounded-lg text-sm font-medium bg-blue-500/10 text-blue-400 border border-blue-500/20">Python 3.11+</span>
+                <span class="px-3 py-1.5 rounded-lg text-sm font-medium bg-green-500/10 text-green-400 border border-green-500/20">Scikit-Learn</span>
+                <span class="px-3 py-1.5 rounded-lg text-sm font-medium bg-yellow-500/10 text-yellow-400 border border-yellow-500/20">Pandas</span>
+                <span class="px-3 py-1.5 rounded-lg text-sm font-medium bg-purple-500/10 text-purple-400 border border-purple-500/20">Matplotlib</span>
+                <span class="px-3 py-1.5 rounded-lg text-sm font-medium bg-pink-500/10 text-pink-400 border border-pink-500/20">Seaborn</span>
+                <span class="px-3 py-1.5 rounded-lg text-sm font-medium bg-orange-500/10 text-orange-400 border border-orange-500/20">NumPy</span>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="animate-in animate-delay-3 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto">
+                <div class="glass rounded-xl p-4 glow-blue">
+                    <p class="text-3xl font-bold text-blue-400">891</p>
+                    <p class="text-xs text-slate-500 mt-1">Passengers</p>
+                </div>
+                <div class="glass rounded-xl p-4 glow-blue">
+                    <p class="text-3xl font-bold text-purple-400">6</p>
+                    <p class="text-xs text-slate-500 mt-1">ML Models</p>
+                </div>
+                <div class="glass rounded-xl p-4 glow-blue">
+                    <p class="text-3xl font-bold text-green-400">7</p>
+                    <p class="text-xs text-slate-500 mt-1">Engineered Features</p>
+                </div>
+                <div class="glass rounded-xl p-4 glow-blue">
+                    <p class="text-3xl font-bold text-pink-400">13+</p>
+                    <p class="text-xs text-slate-500 mt-1">Visualizations</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Overview Section -->
+    <section id="overview" class="py-16 px-4">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-3xl font-bold mb-2">Project Overview</h2>
+            <p class="text-slate-500 mb-10">Understanding the business problem and dataset</p>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- Business Problem -->
+                <div class="glass rounded-2xl p-6">
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="text-2xl">🎯</span>
+                        <h3 class="text-xl font-semibold">Business Problem</h3>
+                    </div>
+                    <p class="text-slate-400 leading-relaxed mb-4">
+                        The sinking of the RMS Titanic on April 15, 1912, killed more than 1,500 of the 2,224 passengers and crew. 
+                        This project builds a binary classification model to predict: <strong class="text-white">Did a passenger survive?</strong>
+                    </p>
+                    <p class="text-slate-400 leading-relaxed">
+                        By analyzing factors like passenger class, gender, age, fare, and family size, we can understand
+                        what made certain groups more likely to survive.
+                    </p>
+                </div>
+
+                <!-- Dataset Info -->
+                <div class="glass rounded-2xl p-6">
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="text-2xl">📊</span>
+                        <h3 class="text-xl font-semibold">Dataset</h3>
+                    </div>
+                    <table class="w-full text-sm">
+                        <tbody>
+                            <tr class="border-b border-slate-700/50">
+                                <td class="py-2 text-slate-500">Source</td>
+                                <td class="py-2 text-right"><a href="https://www.kaggle.com/datasets/yasserh/titanic-dataset" target="_blank" class="text-blue-400 hover:underline">Kaggle (yasserh)</a></td>
+                            </tr>
+                            <tr class="border-b border-slate-700/50">
+                                <td class="py-2 text-slate-500">Rows</td>
+                                <td class="py-2 text-right font-medium">891</td>
+                            </tr>
+                            <tr class="border-b border-slate-700/50">
+                                <td class="py-2 text-slate-500">Columns</td>
+                                <td class="py-2 text-right font-medium">12</td>
+                            </tr>
+                            <tr class="border-b border-slate-700/50">
+                                <td class="py-2 text-slate-500">Target</td>
+                                <td class="py-2 text-right"><code class="code-font text-green-400 bg-green-500/10 px-2 py-0.5 rounded">Survived</code></td>
+                            </tr>
+                            <tr class="border-b border-slate-700/50">
+                                <td class="py-2 text-slate-500">Task</td>
+                                <td class="py-2 text-right font-medium">Binary Classification</td>
+                            </tr>
+                            <tr>
+                                <td class="py-2 text-slate-500">Survival Rate</td>
+                                <td class="py-2 text-right font-medium">38.4%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Feature Table -->
+            <div class="glass rounded-2xl p-6 mt-6">
+                <div class="flex items-center gap-3 mb-4">
+                    <span class="text-2xl">📋</span>
+                    <h3 class="text-xl font-semibold">Dataset Features</h3>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead>
+                            <tr class="border-b border-slate-700">
+                                <th class="text-left py-3 px-2 text-slate-400 font-medium">Column</th>
+                                <th class="text-left py-3 px-2 text-slate-400 font-medium">Type</th>
+                                <th class="text-left py-3 px-2 text-slate-400 font-medium">Description</th>
+                                <th class="text-left py-3 px-2 text-slate-400 font-medium">Missing</th>
+                            </tr>
+                        </thead>
+                        <tbody id="featureTable"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pipeline Section -->
+    <section id="pipeline" class="py-16 px-4 bg-slate-900/50">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-3xl font-bold mb-2">ML Pipeline</h2>
+            <p class="text-slate-500 mb-10">End-to-end workflow executed by <code class="code-font text-blue-400">python main.py</code></p>
+
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-4" id="pipelineSteps">
+            </div>
+
+            <!-- Preprocessing Details -->
+            <div class="grid md:grid-cols-2 gap-6 mt-10">
+                <div class="glass rounded-2xl p-6">
+                    <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
+                        <span class="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center text-blue-400 text-sm font-bold">🧹</span>
+                        Data Preprocessing
+                    </h3>
+                    <div class="space-y-3 text-sm">
+                        <div class="flex items-start gap-3">
+                            <span class="text-green-400 mt-0.5">✓</span>
+                            <div><strong class="text-white">Age</strong><span class="text-slate-400"> — Median imputation grouped by Pclass & Sex</span></div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <span class="text-green-400 mt-0.5">✓</span>
+                            <div><strong class="text-white">Embarked</strong><span class="text-slate-400"> — Mode imputation (Southampton)</span></div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <span class="text-green-400 mt-0.5">✓</span>
+                            <div><strong class="text-white">Cabin</strong><span class="text-slate-400"> — Binary flag (CabinAvailable)</span></div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <span class="text-green-400 mt-0.5">✓</span>
+                            <div><strong class="text-white">Sex</strong><span class="text-slate-400"> — Label Encoding (binary)</span></div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <span class="text-green-400 mt-0.5">✓</span>
+                            <div><strong class="text-white">Embarked</strong><span class="text-slate-400"> — One-Hot Encoding (3 categories)</span></div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <span class="text-green-400 mt-0.5">✓</span>
+                            <div><strong class="text-white">Features</strong><span class="text-slate-400"> — StandardScaler normalization</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass rounded-2xl p-6">
+                    <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
+                        <span class="w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center text-purple-400 text-sm font-bold">⚙️</span>
+                        Feature Engineering
+                    </h3>
+                    <div class="space-y-3 text-sm" id="featureEngList">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Project Structure -->
+    <section id="structure" class="py-16 px-4">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-3xl font-bold mb-2">Project Structure</h2>
+            <p class="text-slate-500 mb-10">Complete file organization</p>
+
+            <div class="glass rounded-2xl p-6 code-font text-sm">
+                <div id="fileTree" class="space-y-0.5"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Models Section -->
+    <section id="models" class="py-16 px-4 bg-slate-900/50">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-3xl font-bold mb-2">Models & Evaluation</h2>
+            <p class="text-slate-500 mb-10">6 classification algorithms trained and compared</p>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4" id="modelCards">
+            </div>
+
+            <!-- Evaluation Metrics -->
+            <div class="glass rounded-2xl p-6 mt-8">
+                <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
+                    <span class="text-2xl">📏</span>
+                    Evaluation Metrics Explained
+                </h3>
+                <div class="grid md:grid-cols-2 gap-4" id="metricsGrid">
+                </div>
+            </div>
+
+            <!-- Hyperparameter Tuning -->
+            <div class="glass rounded-2xl p-6 mt-6">
+                <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
+                    <span class="text-2xl">🔧</span>
+                    Hyperparameter Tuning
+                </h3>
+                <p class="text-slate-400 text-sm mb-4">
+                    GridSearchCV with 5-fold cross-validation is performed on the top 2 models. The search explores
+                    combinations of hyperparameters to find the optimal configuration that maximizes accuracy.
+                </p>
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div class="bg-slate-800/50 rounded-lg p-4">
+                        <p class="text-sm text-slate-500 mb-2">Random Forest Search Space</p>
+                        <pre class="code-font text-xs !p-3 !m-0"><code>n_estimators: [100, 200, 300]
+max_depth: [5, 10, 15, None]
+min_samples_split: [2, 5]
+min_samples_leaf: [1, 2]</code></pre>
+                    </div>
+                    <div class="bg-slate-800/50 rounded-lg p-4">
+                        <p class="text-sm text-slate-500 mb-2">Gradient Boosting Search Space</p>
+                        <pre class="code-font text-xs !p-3 !m-0"><code>n_estimators: [100, 200, 300]
+learning_rate: [0.01, 0.05, 0.1]
+max_depth: [3, 5, 7]
+min_samples_split: [2, 5]</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Code Preview Section -->
+    <section id="code" class="py-16 px-4">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-3xl font-bold mb-2">Code Preview</h2>
+            <p class="text-slate-500 mb-6">Key source files from the project</p>
+
+            <!-- Tabs -->
+            <div class="flex flex-wrap gap-2 mb-4" id="codeTabs"></div>
+
+            <!-- Code Display -->
+            <div class="glass rounded-2xl overflow-hidden">
+                <div class="flex items-center justify-between px-4 py-3 border-b border-slate-700/50">
+                    <span id="codeFilename" class="code-font text-sm text-slate-400"></span>
+                    <button onclick="copyCode()" class="text-xs px-3 py-1 rounded-md bg-slate-700 text-slate-300 hover:bg-slate-600 transition">
+                        Copy
+                    </button>
+                </div>
+                <pre class="!rounded-none !border-0 !m-0 max-h-96 overflow-y-auto"><code id="codeContent" class="code-font text-sm text-slate-300"></code></pre>
+            </div>
+        </div>
+    </section>
+
+    <!-- Results Section -->
+    <section id="results" class="py-16 px-4 bg-slate-900/50">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-3xl font-bold mb-2">Output Artifacts</h2>
+            <p class="text-slate-500 mb-10">All generated files saved in the <code class="code-font text-blue-400">outputs/</code> directory</p>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div class="glass rounded-xl p-5 metric-card">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="text-xl">📊</span>
+                        <span class="font-medium">model_comparison.csv</span>
+                    </div>
+                    <p class="text-sm text-slate-500">Performance table comparing all 6 models across Train Accuracy, Test Accuracy, CV Mean, and CV Std.</p>
+                </div>
+                <div class="glass rounded-xl p-5 metric-card">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="text-xl">📈</span>
+                        <span class="font-medium">predictions.csv</span>
+                    </div>
+                    <p class="text-sm text-slate-500">Test set predictions with actual labels, predicted labels, survival probabilities, and correctness flags.</p>
+                </div>
+                <div class="glass rounded-xl p-5 metric-card">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="text-xl">🤖</span>
+                        <span class="font-medium">titanic_model.pkl</span>
+                    </div>
+                    <p class="text-sm text-slate-500">Serialized best model saved with Joblib for reuse and inference without retraining.</p>
+                </div>
+            </div>
+
+            <!-- Visualization Grid -->
+            <h3 class="text-xl font-semibold mt-10 mb-4">Generated Visualizations (13 plots)</h3>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3" id="vizGrid">
+            </div>
+        </div>
+    </section>
+
+    <!-- How to Run -->
+    <section id="run" class="py-16 px-4">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-3xl font-bold mb-2">How to Run</h2>
+            <p class="text-slate-500 mb-10">Step-by-step instructions</p>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="space-y-4">
+                    <div class="glass rounded-xl p-5">
+                        <div class="flex items-center gap-3 mb-3">
+                            <span class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold text-sm">1</span>
+                            <h4 class="font-semibold">Clone & Setup</h4>
+                        </div>
+                        <pre class="code-font text-xs !p-3"><code>git clone https://github.com/yourusername/Titanic_Survival_Prediction.git
+cd Titanic_Survival_Prediction
+python -m venv venv
+source venv/bin/activate  # or venv\Scripts\activate on Windows
+pip install -r requirements.txt</code></pre>
+                    </div>
+
+                    <div class="glass rounded-xl p-5">
+                        <div class="flex items-center gap-3 mb-3">
+                            <span class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold text-sm">2</span>
+                            <h4 class="font-semibold">Download Dataset</h4>
+                        </div>
+                        <p class="text-sm text-slate-400 mb-2">
+                            Download from <a href="https://www.kaggle.com/datasets/yasserh/titanic-dataset" target="_blank" class="text-blue-400 hover:underline">Kaggle</a> 
+                            and place <code class="code-font text-green-400">Titanic-Dataset.csv</code> in the <code class="code-font text-green-400">dataset/</code> folder.
+                        </p>
+                    </div>
+
+                    <div class="glass rounded-xl p-5">
+                        <div class="flex items-center gap-3 mb-3">
+                            <span class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold text-sm">3</span>
+                            <h4 class="font-semibold">Run the Pipeline</h4>
+                        </div>
+                        <pre class="code-font text-xs !p-3"><code>python main.py</code></pre>
+                        <p class="text-xs text-slate-500 mt-2">This executes the complete ML pipeline automatically.</p>
+                    </div>
+
+                    <div class="glass rounded-xl p-5">
+                        <div class="flex items-center gap-3 mb-3">
+                            <span class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold text-sm">4</span>
+                            <h4 class="font-semibold">Or Run Notebook</h4>
+                        </div>
+                        <pre class="code-font text-xs !p-3"><code>cd notebook
+jupyter notebook Titanic_Survival_Prediction.ipynb</code></pre>
+                    </div>
+                </div>
+
+                <!-- What happens when you run -->
+                <div class="glass rounded-2xl p-6">
+                    <h4 class="font-semibold mb-4 flex items-center gap-2">
+                        <span class="text-xl">⚡</span>
+                        What <code class="code-font text-blue-400">python main.py</code> does
+                    </h4>
+                    <div class="space-y-2 text-sm" id="pipelineChecklist">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-10 px-4 border-t border-slate-800">
+        <div class="max-w-6xl mx-auto text-center">
+            <p class="text-slate-500 text-sm">
+                Built as part of the <strong class="text-slate-400">CodSoft Data Science Internship</strong> — Task 1
+            </p>
+            <p class="text-slate-600 text-xs mt-2">
+                Python • Pandas • NumPy • Scikit-Learn • Matplotlib • Seaborn • Joblib
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Data
+        const features = [
+            { col: "PassengerId", type: "int64", desc: "Unique passenger identifier", missing: "0%" },
+            { col: "Survived", type: "int64", desc: "Survival (0 = No, 1 = Yes) — TARGET", missing: "0%" },
+            { col: "Pclass", type: "int64", desc: "Ticket class (1st, 2nd, 3rd)", missing: "0%" },
+            { col: "Name", type: "object", desc: "Passenger full name", missing: "0%" },
+            { col: "Sex", type: "object", desc: "Gender (male/female)", missing: "0%" },
+            { col: "Age", type: "float64", desc: "Age in years", missing: "19.9%" },
+            { col: "SibSp", type: "int64", desc: "# siblings/spouses aboard", missing: "0%" },
+            { col: "Parch", type: "int64", desc: "# parents/children aboard", missing: "0%" },
+            { col: "Ticket", type: "object", desc: "Ticket number", missing: "0%" },
+            { col: "Fare", type: "float64", desc: "Passenger fare ($)", missing: "0%" },
+            { col: "Cabin", type: "object", desc: "Cabin number", missing: "77.1%" },
+            { col: "Embarked", type: "object", desc: "Port (C=Cherbourg, Q=Queenstown, S=Southampton)", missing: "0.2%" },
+        ];
+
+        const featureTableBody = document.getElementById("featureTable");
+        features.forEach(f => {
+            const missingClass = f.missing !== "0%" ? "text-amber-400" : "text-green-400";
+            featureTableBody.innerHTML += `
+                <tr class="border-b border-slate-700/30 hover:bg-slate-800/30">
+                    <td class="py-2.5 px-2 font-medium code-font text-blue-300">${f.col}</td>
+                    <td class="py-2.5 px-2 text-slate-500 code-font text-xs">${f.type}</td>
+                    <td class="py-2.5 px-2 text-slate-400">${f.desc}</td>
+                    <td class="py-2.5 px-2 ${missingClass} font-medium">${f.missing}</td>
+                </tr>`;
+        });
+
+        // Pipeline Steps
+        const pipelineSteps = [
+            { icon: "📥", title: "Load Data", desc: "Read CSV" },
+            { icon: "🔍", title: "Explore", desc: "EDA & Viz" },
+            { icon: "🧹", title: "Clean", desc: "Impute & Encode" },
+            { icon: "⚙️", title: "Engineer", desc: "New Features" },
+            { icon: "📐", title: "Scale", desc: "StandardScaler" },
+            { icon: "🤖", title: "Train", desc: "6 Models" },
+            { icon: "⚖️", title: "Compare", desc: "CV Scores" },
+            { icon: "🔧", title: "Tune", desc: "GridSearchCV" },
+            { icon: "📊", title: "Evaluate", desc: "Full Metrics" },
+            { icon: "💾", title: "Save", desc: "Model + Outputs" },
+        ];
+
+        const pipelineContainer = document.getElementById("pipelineSteps");
+        pipelineSteps.forEach((step, i) => {
+            pipelineContainer.innerHTML += `
+                <div class="glass rounded-xl p-4 text-center metric-card">
+                    <span class="text-2xl">${step.icon}</span>
+                    <p class="font-semibold text-sm mt-2">${step.title}</p>
+                    <p class="text-xs text-slate-500">${step.desc}</p>
+                </div>`;
+        });
+
+        // Feature Engineering List
+        const engineeredFeatures = [
+            { name: "Title", desc: "Extracted from Name — encodes social status & gender", color: "blue" },
+            { name: "FamilySize", desc: "SibSp + Parch + 1 — family dynamics affect survival", color: "green" },
+            { name: "IsAlone", desc: "Binary flag — solo travelers had lower survival", color: "yellow" },
+            { name: "CabinAvailable", desc: "Binary flag — proxy for socio-economic status", color: "purple" },
+            { name: "TicketFrequency", desc: "Shared tickets indicate group travel dynamics", color: "pink" },
+            { name: "FareCategory", desc: "Binned fare (4 groups) — reduces outlier noise", color: "orange" },
+            { name: "AgeCategory", desc: "Child/Teen/Adult/Senior — captures non-linear patterns", color: "cyan" },
+        ];
+
+        const featureEngContainer = document.getElementById("featureEngList");
+        engineeredFeatures.forEach(f => {
+            featureEngContainer.innerHTML += `
+                <div class="flex items-start gap-3">
+                    <span class="text-${f.color}-400 mt-0.5 font-bold">+</span>
+                    <div>
+                        <strong class="text-white">${f.name}</strong>
+                        <span class="text-slate-400"> — ${f.desc}</span>
+                    </div>
+                </div>`;
+        });
+
+        // File Tree
+        const fileTree = [
+            { name: "Titanic_Survival_Prediction/", indent: 0, type: "dir" },
+            { name: "dataset/", indent: 1, type: "dir" },
+            { name: "Titanic-Dataset.csv", indent: 2, type: "csv" },
+            { name: "notebook/", indent: 1, type: "dir" },
+            { name: "Titanic_Survival_Prediction.ipynb", indent: 2, type: "notebook" },
+            { name: "src/", indent: 1, type: "dir" },
+            { name: "__init__.py", indent: 2, type: "py" },
+            { name: "preprocessing.py", indent: 2, type: "py" },
+            { name: "feature_engineering.py", indent: 2, type: "py" },
+            { name: "model_training.py", indent: 2, type: "py" },
+            { name: "evaluation.py", indent: 2, type: "py" },
+            { name: "prediction.py", indent: 2, type: "py" },
+            { name: "utils.py", indent: 2, type: "py" },
+            { name: "models/", indent: 1, type: "dir" },
+            { name: "titanic_model.pkl", indent: 2, type: "model" },
+            { name: "outputs/", indent: 1, type: "dir" },
+            { name: "confusion_matrix.png", indent: 2, type: "img" },
+            { name: "roc_curve.png", indent: 2, type: "img" },
+            { name: "feature_importance.png", indent: 2, type: "img" },
+            { name: "correlation_heatmap.png", indent: 2, type: "img" },
+            { name: "predictions.csv", indent: 2, type: "csv" },
+            { name: "model_comparison.csv", indent: 2, type: "csv" },
+            { name: "main.py", indent: 1, type: "py" },
+            { name: "README.md", indent: 1, type: "md" },
+            { name: "requirements.txt", indent: 1, type: "txt" },
+            { name: ".gitignore", indent: 1, type: "txt" },
+        ];
+
+        const icons = {
+            dir: "📁", py: "🐍", csv: "📄", notebook: "📓",
+            model: "🤖", img: "🖼️", md: "📝", txt: "📋"
+        };
+
+        const colors = {
+            dir: "text-yellow-400", py: "text-green-400", csv: "text-blue-400",
+            notebook: "text-orange-400", model: "text-purple-400", img: "text-pink-400",
+            md: "text-slate-300", txt: "text-slate-400"
+        };
+
+        const fileTreeContainer = document.getElementById("fileTree");
+        fileTree.forEach(f => {
+            const pad = f.indent * 24;
+            const prefix = f.indent > 0 ? (f.type === "dir" ? "├── " : "├── ") : "";
+            fileTreeContainer.innerHTML += `
+                <div class="file-tree-item py-1 px-3 rounded" style="padding-left: ${pad + 12}px">
+                    <span class="mr-2">${icons[f.type]}</span>
+                    <span class="${colors[f.type]} ${f.type === 'dir' ? 'font-semibold' : ''}">${f.name}</span>
+                </div>`;
+        });
+
+        // Model Cards
+        const models = [
+            { name: "Logistic Regression", icon: "📈", desc: "Linear classifier — strong baseline for binary problems. Fast, interpretable, works well with scaled features.", color: "blue" },
+            { name: "Decision Tree", icon: "🌳", desc: "Non-linear, interpretable tree structure. Prone to overfitting but captures complex patterns.", color: "green" },
+            { name: "Random Forest", icon: "🌲", desc: "Ensemble of decision trees. Reduces overfitting through bagging and feature randomization.", color: "emerald" },
+            { name: "Gradient Boosting", icon: "🚀", desc: "Sequential ensemble — each tree corrects previous errors. Often achieves highest accuracy.", color: "purple" },
+            { name: "K-Nearest Neighbors", icon: "🎯", desc: "Instance-based learning. Classifies by majority vote of k nearest training examples.", color: "orange" },
+            { name: "Support Vector Machine", icon: "⚡", desc: "Finds optimal hyperplane separating classes. Effective in high-dimensional spaces.", color: "pink" },
+        ];
+
+        const modelCardsContainer = document.getElementById("modelCards");
+        models.forEach(m => {
+            modelCardsContainer.innerHTML += `
+                <div class="glass rounded-xl p-5 metric-card">
+                    <div class="flex items-center gap-3 mb-3">
+                        <span class="text-2xl">${m.icon}</span>
+                        <h4 class="font-semibold">${m.name}</h4>
+                    </div>
+                    <p class="text-sm text-slate-400">${m.desc}</p>
+                </div>`;
+        });
+
+        // Metrics
+        const metrics = [
+            { name: "Accuracy", desc: "Overall proportion of correct predictions. Simple and intuitive but can be misleading with imbalanced classes.", icon: "🎯" },
+            { name: "Precision", desc: "Of those predicted as survived, how many actually survived. Important when false positives are costly.", icon: "🔍" },
+            { name: "Recall", desc: "Of those who actually survived, how many were correctly identified. Important when missing survivors is costly.", icon: "📡" },
+            { name: "F1 Score", desc: "Harmonic mean of precision and recall. Balances both metrics into a single number.", icon: "⚖️" },
+            { name: "ROC-AUC", desc: "Area under the ROC curve. Measures the model's ability to distinguish between classes across all thresholds.", icon: "📈" },
+            { name: "Cross-Validation", desc: "5-fold CV average accuracy. Measures how well the model generalizes to unseen data.", icon: "🔄" },
+        ];
+
+        const metricsContainer = document.getElementById("metricsGrid");
+        metrics.forEach(m => {
+            metricsContainer.innerHTML += `
+                <div class="bg-slate-800/50 rounded-lg p-4">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span>${m.icon}</span>
+                        <span class="font-semibold text-sm">${m.name}</span>
+                    </div>
+                    <p class="text-xs text-slate-500 leading-relaxed">${m.desc}</p>
+                </div>`;
+        });
+
+        // Code Tabs
+        const codeFiles = {
+            "main.py": `"""
+Titanic Survival Prediction — Main Pipeline
+CodSoft Data Science Internship — Task 1
+"""
+
+import sys, warnings
+from pathlib import Path
+
+PROJECT_ROOT = Path(__file__).resolve().parent
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+warnings.filterwarnings("ignore")
+
+from src.utils import setup_directories, load_dataset, dataset_overview, print_section
+from src.preprocessing import full_preprocessing_pipeline, encode_categorical, drop_unnecessary_columns, scale_features
+from src.feature_engineering import full_feature_engineering
+from src.model_training import split_data, train_and_compare, hyperparameter_tuning, save_model
+from src.evaluation import full_evaluation, plot_confusion_matrix, plot_roc_curve, plot_feature_importance, generate_eda_plots
+from src.prediction import generate_predictions_csv, demo_predictions
+
+
+def main():
+    setup_directories()
+    
+    # Load & Explore
+    df = load_dataset("Titanic-Dataset.csv")
+    dataset_overview(df)
+    generate_eda_plots(df)
+    
+    # Preprocess & Engineer
+    df = full_preprocessing_pipeline(df)
+    df = full_feature_engineering(df)
+    df = encode_categorical(df)
+    df = drop_unnecessary_columns(df)
+    
+    # Train-Test Split & Scale
+    X_train, X_test, y_train, y_test = split_data(df)
+    X_train_scaled, scaler = scale_features(X_train)
+    X_test_scaled = pd.DataFrame(scaler.transform(X_test), columns=X_train.columns, index=X_test.index)
+    
+    # Train, Compare, Tune
+    comparison_df = train_and_compare(X_train_scaled, X_test_scaled, y_train, y_test)
+    best_model, best_name, best_params, best_cv = hyperparameter_tuning(X_train_scaled, y_train, comparison_df)
+    
+    # Evaluate & Save
+    metrics = full_evaluation(best_model, X_test_scaled, y_test, X_train_scaled, y_train, best_name)
+    plot_confusion_matrix(best_model, X_test_scaled, y_test)
+    plot_roc_curve(best_model, X_test_scaled, y_test)
+    plot_feature_importance(best_model, list(X_train.columns))
+    save_model(best_model)
+    generate_predictions_csv(best_model, X_test_scaled, y_test)
+    demo_predictions(best_model, list(X_train.columns))
+
+if __name__ == "__main__":
+    main()`,
+
+            "preprocessing.py": `"""Data preprocessing module — handles missing values, encoding, scaling."""
+
+import pandas as pd
+import numpy as np
+from sklearn.preprocessing import LabelEncoder, StandardScaler
+
+
+def handle_missing_values(df: pd.DataFrame) -> pd.DataFrame:
+    df = df.copy()
+    # Age: median by Pclass & Sex (correlated with age distribution)
+    df["Age"] = df.groupby(["Pclass", "Sex"])["Age"].transform(
+        lambda x: x.fillna(x.median())
+    )
+    df["Age"].fillna(df["Age"].median(), inplace=True)
+    
+    # Embarked: mode imputation (only 2 missing)
+    df["Embarked"].fillna(df["Embarked"].mode()[0], inplace=True)
+    
+    # Fare: median by Pclass
+    if df["Fare"].isnull().any():
+        df["Fare"] = df.groupby("Pclass")["Fare"].transform(lambda x: x.fillna(x.median()))
+    
+    # Cabin: mark as Unknown (77% missing)
+    df["Cabin"].fillna("Unknown", inplace=True)
+    return df
+
+
+def encode_categorical(df: pd.DataFrame) -> pd.DataFrame:
+    df = df.copy()
+    le_sex = LabelEncoder()
+    df["Sex"] = le_sex.fit_transform(df["Sex"])
+    
+    embarked_dummies = pd.get_dummies(df["Embarked"], prefix="Embarked", dtype=int)
+    df = pd.concat([df, embarked_dummies], axis=1)
+    df.drop("Embarked", axis=1, inplace=True)
+    
+    if "Title" in df.columns:
+        le_title = LabelEncoder()
+        df["Title"] = le_title.fit_transform(df["Title"])
+    return df
+
+
+def scale_features(X: pd.DataFrame) -> tuple:
+    scaler = StandardScaler()
+    X_scaled = pd.DataFrame(scaler.fit_transform(X), columns=X.columns, index=X.index)
+    return X_scaled, scaler`,
+
+            "feature_engineering.py": `"""Feature engineering — creates new predictive features."""
+
+import pandas as pd
+import numpy as np
+
+
+def extract_title(df):
+    df = df.copy()
+    df["Title"] = df["Name"].str.extract(r" ([A-Za-z]+)\\\\.", expand=False)
+    title_map = {
+        "Mr": "Mr", "Miss": "Miss", "Mrs": "Mrs", "Master": "Master",
+        "Dr": "Rare", "Rev": "Rare", "Col": "Rare", "Major": "Rare",
+        "Mlle": "Miss", "Ms": "Miss", "Mme": "Mrs", "Capt": "Rare",
+        "Sir": "Rare", "Lady": "Rare", "Don": "Rare", "Dona": "Rare",
+        "Countess": "Rare", "Jonkheer": "Rare"
+    }
+    df["Title"] = df["Title"].map(title_map).fillna("Rare")
+    return df
+
+
+def create_family_features(df):
+    df = df.copy()
+    df["FamilySize"] = df["SibSp"] + df["Parch"] + 1
+    df["IsAlone"] = (df["FamilySize"] == 1).astype(int)
+    return df
+
+
+def create_cabin_available(df):
+    df = df.copy()
+    df["CabinAvailable"] = (df["Cabin"] != "Unknown").astype(int)
+    return df
+
+
+def create_ticket_frequency(df):
+    df = df.copy()
+    df["TicketFrequency"] = df["Ticket"].map(df["Ticket"].value_counts())
+    return df
+
+
+def create_binned_features(df):
+    df = df.copy()
+    df["FareCategory"] = pd.qcut(df["Fare"], 4, labels=["Low","Medium","High","VeryHigh"]).astype(str)
+    df["AgeCategory"] = pd.cut(df["Age"], [0,12,18,60,100], labels=["Child","Teen","Adult","Senior"]).astype(str)
+    for col in ["FareCategory", "AgeCategory"]:
+        dummies = pd.get_dummies(df[col], prefix=col, dtype=int)
+        df = pd.concat([df, dummies], axis=1)
+        df.drop(col, axis=1, inplace=True)
+    return df`,
+
+            "model_training.py": `"""Model training — trains 6 classifiers, compares, and tunes."""
+
+from sklearn.linear_model import LogisticRegression
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.svm import SVC
+from sklearn.model_selection import train_test_split, cross_val_score, GridSearchCV
+import joblib
+
+
+def get_models():
+    return {
+        "Logistic Regression": LogisticRegression(max_iter=1000, random_state=42),
+        "Decision Tree": DecisionTreeClassifier(random_state=42),
+        "Random Forest": RandomForestClassifier(n_estimators=100, random_state=42),
+        "Gradient Boosting": GradientBoostingClassifier(n_estimators=100, random_state=42),
+        "KNN": KNeighborsClassifier(n_neighbors=5),
+        "SVM": SVC(kernel="rbf", probability=True, random_state=42),
+    }
+
+
+def train_and_compare(X_train, X_test, y_train, y_test):
+    models = get_models()
+    results = []
+    for name, model in models.items():
+        model.fit(X_train, y_train)
+        train_acc = model.score(X_train, y_train)
+        test_acc = accuracy_score(y_test, model.predict(X_test))
+        cv = cross_val_score(model, X_train, y_train, cv=5)
+        results.append({
+            "Model": name, "Train Accuracy": train_acc,
+            "Test Accuracy": test_acc, "CV Mean": cv.mean(), "CV Std": cv.std()
+        })
+    return pd.DataFrame(results).sort_values("CV Mean", ascending=False)
+
+
+def hyperparameter_tuning(X_train, y_train, comparison_df):
+    top_models = comparison_df.head(2)["Model"].tolist()
+    # GridSearchCV on each top model with tailored param grids
+    # Returns: best_model, best_name, best_params, best_score
+    ...`,
+
+            "evaluation.py": `"""Model evaluation — metrics, confusion matrix, ROC curve, feature importance."""
+
+from sklearn.metrics import (
+    accuracy_score, precision_score, recall_score, f1_score,
+    roc_auc_score, roc_curve, confusion_matrix, classification_report
+)
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+
+def full_evaluation(model, X_test, y_test, X_train, y_train, model_name):
+    y_pred = model.predict(X_test)
+    y_proba = model.predict_proba(X_test)[:, 1]
+    
+    metrics = {
+        "Accuracy": accuracy_score(y_test, y_pred),
+        "Precision": precision_score(y_test, y_pred),
+        "Recall": recall_score(y_test, y_pred),
+        "F1 Score": f1_score(y_test, y_pred),
+        "ROC-AUC": roc_auc_score(y_test, y_proba),
+    }
+    return metrics
+
+
+def plot_confusion_matrix(model, X_test, y_test):
+    cm = confusion_matrix(y_test, model.predict(X_test))
+    fig, ax = plt.subplots(figsize=(8, 6))
+    sns.heatmap(cm, annot=True, fmt="d", cmap="Blues",
+                xticklabels=["Not Survived", "Survived"],
+                yticklabels=["Not Survived", "Survived"])
+    ax.set_title("Confusion Matrix")
+    fig.savefig("outputs/confusion_matrix.png", dpi=150, bbox_inches="tight")
+
+
+def plot_roc_curve(model, X_test, y_test):
+    y_proba = model.predict_proba(X_test)[:, 1]
+    fpr, tpr, _ = roc_curve(y_test, y_proba)
+    auc = roc_auc_score(y_test, y_proba)
+    fig, ax = plt.subplots(figsize=(8, 6))
+    ax.plot(fpr, tpr, label=f"AUC = {auc:.4f}")
+    ax.plot([0,1], [0,1], "--", color="gray")
+    ax.set_title("ROC Curve")
+    ax.legend()
+    fig.savefig("outputs/roc_curve.png", dpi=150, bbox_inches="tight")`,
+
+            "prediction.py": `"""Prediction module — accepts passenger info, returns survival prediction."""
+
+import pandas as pd
+import joblib
+
+
+def predict_survival(model, feature_names, **passenger_data):
+    \"\"\"
+    Predict survival for a single passenger.
+    Returns: prediction label and probability.
+    
+    Example:
+        result = predict_survival(
+            model, feature_names,
+            pclass=1, sex=0, age=29, fare=211.3, ...
+        )
+        # {'Prediction': 'Survived', 'Probability': '91.43%'}
+    \"\"\"
+    input_data = {feat: passenger_data.get(feat, 0) for feat in feature_names}
+    X = pd.DataFrame([input_data])
+    
+    prediction = model.predict(X)[0]
+    probability = model.predict_proba(X)[0]
+    
+    return {
+        "Prediction": "Survived" if prediction == 1 else "Not Survived",
+        "Probability_Survived": f"{probability[1] * 100:.2f}%",
+        "Probability_Not_Survived": f"{probability[0] * 100:.2f}%",
+    }
+
+
+def generate_predictions_csv(model, X_test, y_test):
+    y_pred = model.predict(X_test)
+    y_proba = model.predict_proba(X_test)[:, 1]
+    predictions_df = pd.DataFrame({
+        "Actual": y_test.values,
+        "Predicted": y_pred,
+        "Probability_Survived": (y_proba * 100).round(2),
+        "Correct": (y_test.values == y_pred).astype(int),
+    })
+    predictions_df.to_csv("outputs/predictions.csv", index=False)`,
+        };
+
+        const codeTabsContainer = document.getElementById("codeTabs");
+        const codeContentEl = document.getElementById("codeContent");
+        const codeFilenameEl = document.getElementById("codeFilename");
+        let activeTab = "main.py";
+
+        function showCode(filename) {
+            activeTab = filename;
+            codeContentEl.textContent = codeFiles[filename];
+            codeFilenameEl.textContent = filename;
+            document.querySelectorAll('[data-tab]').forEach(tab => {
+                tab.className = tab.dataset.tab === filename
+                    ? 'px-4 py-2 rounded-lg text-sm font-medium cursor-pointer transition tab-active'
+                    : 'px-4 py-2 rounded-lg text-sm font-medium cursor-pointer transition tab-inactive';
+            });
+        }
+
+        Object.keys(codeFiles).forEach(filename => {
+            codeTabsContainer.innerHTML += `
+                <button data-tab="${filename}" onclick="showCode('${filename}')"
+                    class="px-4 py-2 rounded-lg text-sm font-medium cursor-pointer transition tab-inactive">
+                    ${filename}
+                </button>`;
+        });
+
+        showCode("main.py");
+
+        function copyCode() {
+            navigator.clipboard.writeText(codeFiles[activeTab]).then(() => {
+                const btn = event.target;
+                btn.textContent = "Copied!";
+                setTimeout(() => btn.textContent = "Copy", 2000);
+            });
+        }
+
+        // Visualization Grid
+        const visualizations = [
+            "missing_values_heatmap.png", "correlation_heatmap.png",
+            "survival_distribution.png", "pclass_distribution.png",
+            "gender_distribution.png", "age_distribution.png",
+            "fare_distribution.png", "survival_vs_gender.png",
+            "survival_vs_pclass.png", "age_vs_survival.png",
+            "feature_importance.png", "roc_curve.png",
+            "confusion_matrix.png"
+        ];
+
+        const vizContainer = document.getElementById("vizGrid");
+        visualizations.forEach(v => {
+            const name = v.replace('.png', '').replace(/_/g, ' ');
+            vizContainer.innerHTML += `
+                <div class="glass rounded-lg p-3 text-center metric-card">
+                    <div class="w-full h-20 rounded bg-gradient-to-br from-slate-700 to-slate-800 flex items-center justify-center mb-2">
+                        <span class="text-2xl">📊</span>
+                    </div>
+                    <p class="text-xs text-slate-400 capitalize">${name}</p>
+                </div>`;
+        });
+
+        // Pipeline Checklist
+        const pipelineActions = [
+            "Load Titanic-Dataset.csv from dataset/",
+            "Print dataset overview (shape, types, missing values)",
+            "Generate 10+ EDA visualizations",
+            "Handle missing values (Age, Embarked, Cabin)",
+            "Remove duplicate rows",
+            "Engineer 7 new features",
+            "Encode categorical variables",
+            "Drop unnecessary columns",
+            "Split into 80% train / 20% test",
+            "Apply StandardScaler normalization",
+            "Train 6 classification models",
+            "Cross-validate and compare all models",
+            "GridSearchCV on top 2 models",
+            "Full evaluation (Accuracy, Precision, Recall, F1, AUC)",
+            "Generate confusion matrix & ROC curve",
+            "Plot feature importance",
+            "Save best model to models/titanic_model.pkl",
+            "Generate predictions.csv",
+            "Run sample predictions with probabilities",
+            "Save all plots to outputs/"
+        ];
+
+        const checklistContainer = document.getElementById("pipelineChecklist");
+        pipelineActions.forEach((action, i) => {
+            checklistContainer.innerHTML += `
+                <div class="flex items-start gap-3 py-1">
+                    <span class="text-green-400 text-xs mt-1">✓</span>
+                    <span class="text-slate-400 text-sm">${action}</span>
+                </div>`;
+        });
+
+        // Mobile menu toggle
+        document.getElementById("mobileMenuBtn").addEventListener("click", () => {
+            document.getElementById("mobileMenu").classList.toggle("hidden");
+        });
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    document.getElementById("mobileMenu").classList.add("hidden");
+                }
+            });
+        });
+
+        // Scroll animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-in');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('section').forEach(section => {
+            observer.observe(section);
+        });
+    </script>
+</body>
+</html>
