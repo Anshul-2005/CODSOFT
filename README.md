@@ -4,6 +4,14 @@ This repository showcases the machine learning projects I completed during my **
 
 ---
 
+## 🌐 Live Project Showcase
+
+**Live Website:** https://anshul-verma20.netlify.app
+
+Explore all completed internship projects through a modern interactive landing page, with direct access to each project's documentation, methodology, and implementation.
+
+---
+
 ## 📂 Projects
 
 ### ✅ Task 1 – Titanic Survival Prediction
@@ -56,6 +64,13 @@ An end-to-end fraud detection system for identifying fraudulent credit card tran
 
 ---
 
+## 🔗 Quick Links
+
+- 🌐 **Live Website:** https://anshul-verma20.netlify.app
+- 📂 **GitHub Repository:** https://github.com/Anshul-2005/CODSOFT
+
+---
+
 ## 🛠️ Technology Stack
 
 - Python
@@ -77,10 +92,12 @@ An end-to-end fraud detection system for identifying fraudulent credit card tran
 ```
 CODSOFT/
 │
+├── index.html
+├── README.md
+├── LICENSE
 ├── Task1_Titanic_Survival_Prediction/
 ├── Task2_Movie_Rating_Prediction/
-├── Task3_Credit_Card_Fraud_Detection/
-└── README.md
+└── Task5_Credit_Card_Fraud_Detection/
 ```
 
 ---
@@ -104,8 +121,9 @@ CODSOFT/
 
 **Anshul Verma**
 
-- GitHub: **https://github.com/Anshul-2005**
+- GitHub: https://github.com/Anshul-2005
+- Live Project Showcase: https://anshul-verma20.netlify.app
 
 ---
 
-⭐ If you found these projects helpful, consider giving this repository a star.
+⭐ If you found these projects useful, consider giving this repository a star. Feedback and suggestions are always welcome.
